@@ -21,6 +21,11 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      /*
+        Checks if the clicked target (event.target) is inside the dropdown element.
+        Condition: If the dropdown element (dropdownRef.current) exists and does not contain
+        the clicked target (event.target), it means the user clicked outside the dropdown.
+      */
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
