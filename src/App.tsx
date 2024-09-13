@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ComponentType } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,9 +6,10 @@ import {
   Navigate,
 } from "react-router-dom";
 import Home from "./pages/Home";
-import Login from "@components/authentication/Login";
-import Register from "@components/authentication/Register";
+import Login from "./components/authentication/Login";
+import Register from "./components/authentication/Register";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
+import Spinner from "./components/Spinner";
 
 const App: React.FC = () => {
   return (
@@ -25,7 +26,7 @@ const App: React.FC = () => {
 };
 
 interface ProtectedRouteProps {
-  component: React.ComponentType;
+  component: ComponentType;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -33,8 +34,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const authContext = React.useContext(AuthContext);
 
-  if (!authContext || authContext.loading) {
+  if (!authContext) {
     return <div>Loading...</div>;
+  }
+
+  if (authContext.loading) {
+    return <Spinner size="100" />;
   }
 
   return authContext.user ? <Component /> : <Navigate to="/login" />;

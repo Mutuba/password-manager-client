@@ -1,4 +1,3 @@
-// src/context/AuthContext.tsx
 import { createContext, useState, useEffect, FC } from "react";
 import axios from "axios";
 import {
@@ -10,7 +9,7 @@ import {
 } from "../types/AuthTypes";
 import Spinner from "../components/Spinner";
 
-const API_BASE_URL = import.meta.env.API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -23,7 +22,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     initialState?.loading ?? true
   );
 
-  // Effect to initialize authentication state from local storage
   useEffect(() => {
     const checkSession = async () => {
       const token = localStorage.getItem("token");
@@ -59,10 +57,9 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/auth/register`,
-        userData
-      );
+      const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+        user: userData,
+      });
       const { auth_token, user } = response.data;
 
       localStorage.setItem("token", auth_token);
@@ -88,10 +85,9 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/auth/login`,
-        loginData
-      );
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+        user: loginData,
+      });
       const { auth_token, user } = response.data;
 
       localStorage.setItem("token", auth_token);

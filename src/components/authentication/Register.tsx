@@ -1,5 +1,7 @@
-import React, { useState, FormEvent } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, FormEvent, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { AuthContextType } from "../../types/AuthTypes";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -7,28 +9,19 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  const { register } = useContext(AuthContext) as AuthContextType;
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("/auth/sign_up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user: { username, email, password } }),
-      });
+    const { success, message } = await register({ username, email, password });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage("Registration successful");
-        // Handle token or redirect here
-      } else {
-        setMessage(data.error || "Registration failed");
-      }
-    } catch (error) {
-      setMessage("An error occurred while registering.");
+    if (success) {
+      setMessage("Registration successful");
+      navigate("/");
+    } else {
+      setMessage(message || "Registration failed");
     }
   };
 

@@ -1,13 +1,12 @@
-// src/pages/Home.tsx
-
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import Spinner from "../components/Spinner";
 
 const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
 
   if (!authContext) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   const { user } = authContext;
