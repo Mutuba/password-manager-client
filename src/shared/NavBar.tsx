@@ -40,13 +40,13 @@ const Navbar: React.FC = () => {
   const { user } = authContext;
 
   return (
-    <nav className="bg-gray-800">
+    <nav className="bg-blue-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
             <img
-              className="h-15 w-12"
+              className="h-12 w-12"
               src={logo}
               alt="Password Guardian Logo"
             />
