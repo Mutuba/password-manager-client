@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
-import Spinner from "./components/Spinner";
+import Spinner from "./shared/Spinner";
 
 const App: React.FC = () => {
   return (

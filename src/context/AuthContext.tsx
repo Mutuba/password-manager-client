@@ -7,7 +7,7 @@ import {
   LoginData,
   RegisterData,
 } from "../types/AuthTypes";
-import Spinner from "../components/Spinner";
+import Spinner from "../shared/Spinner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
