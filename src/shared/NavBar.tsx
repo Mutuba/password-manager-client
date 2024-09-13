@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import logo from "../assets/logo.svg";
+import Spinner from "./Spinner";
 
 const Navbar: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -32,7 +34,7 @@ const Navbar: React.FC = () => {
   }, []);
 
   if (!authContext) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   const { user } = authContext;
@@ -44,9 +46,9 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-              alt="Your Company"
+              className="h-15 w-12"
+              src={logo}
+              alt="Password Guardian Logo"
             />
           </div>
           {/* Centered App Name */}
