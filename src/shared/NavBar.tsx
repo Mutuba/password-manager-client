@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
           </div>
           {/* Centered App Name */}
           <div className="flex-1 flex justify-center items-center">
-            <span className="text-white text-lg font-bold">
+            <span className="text-white text-3xl font-bold">
               Password Guardian
             </span>
           </div>

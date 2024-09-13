@@ -34,11 +34,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const authContext = React.useContext(AuthContext);
 
-  if (!authContext) {
-    return <div>Loading...</div>;
-  }
-
-  if (authContext.loading) {
+  if (!authContext || authContext.loading) {
     return <Spinner size="100" />;
   }
 
