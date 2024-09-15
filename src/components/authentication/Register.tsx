@@ -11,9 +11,7 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     const { success } = await register({ username, email, password });
-
     if (success) {
       navigate("/");
     }
