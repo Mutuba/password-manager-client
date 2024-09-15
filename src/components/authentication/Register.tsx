@@ -51,6 +51,7 @@ const Register: React.FC = () => {
           type="text"
           placeholder="Username"
           name="username"
+          required
           value={formData?.username}
           onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
@@ -59,6 +60,7 @@ const Register: React.FC = () => {
           type="email"
           placeholder="Email"
           value={formData?.email}
+          required
           name="email"
           onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
@@ -66,6 +68,7 @@ const Register: React.FC = () => {
         <input
           type="password"
           name="password"
+          required
           placeholder="Password"
           value={formData?.password}
           onChange={handleChange}

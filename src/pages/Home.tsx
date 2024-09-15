@@ -4,7 +4,6 @@ import Navbar from "../shared/NavBar";
 
 const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
-
   const { user } = authContext;
 
   return (

@@ -36,6 +36,7 @@ const Login: React.FC = () => {
           type="text"
           placeholder="Username"
           name="username"
+          required
           value={formData?.username}
           onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
@@ -44,6 +45,7 @@ const Login: React.FC = () => {
           type="password"
           placeholder="Password"
           name="password"
+          required
           value={formData?.password}
           onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
