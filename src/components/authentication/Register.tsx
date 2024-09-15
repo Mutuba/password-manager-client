@@ -1,27 +1,21 @@
 import React, { useState, FormEvent, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { AuthContextType } from "../../types/AuthTypes";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-
-  const { register } = useContext(AuthContext) as AuthContextType;
+  const { register, authError } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const { success, message } = await register({ username, email, password });
+    const { success } = await register({ username, email, password });
 
     if (success) {
-      setMessage("Registration successful");
       navigate("/");
-    } else {
-      setMessage(message || "Registration failed");
     }
   };
 
@@ -59,7 +53,9 @@ const Register: React.FC = () => {
         >
           Register
         </button>
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+        {authError && (
+          <p className="mt-4 text-center text-red-500">{authError}</p>
+        )}
         <p className="mt-4 text-center">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-500">

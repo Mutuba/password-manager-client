@@ -14,7 +14,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const AuthContext = createContext<AuthContextType>({
   user: null,
   userToken: null,
-  error: null,
+  authError: null,
   loading: true,
   login: async () => ({ success: false }),
   register: async () => ({ success: false }),
@@ -30,7 +30,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     initialState?.loading ?? true
   );
 
-  const [error, setError] = useState<string | null>(
+  const [authError, setAuthError] = useState<string | null>(
     initialState?.error ?? null
   );
 
@@ -81,7 +81,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
       return { success: true, user };
     } catch (error) {
       const message = (error as any).response?.data?.error || "Login failed";
-      setError(message);
+      setAuthError(message);
       return { success: false };
     } finally {
       setLoading(false);
@@ -105,7 +105,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     } catch (error: any) {
       setLoading(false);
       const message = (error as any).response?.data?.error || "Login failed";
-      setError(message);
+      setAuthError(message);
       return { success: false };
     } finally {
       setLoading(false);
@@ -120,7 +120,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, userToken, error, loading, login, register, logout }}
+      value={{ user, userToken, authError, loading, login, register, logout }}
     >
       {loading ? (
         <div className="flex items-center justify-center h-screen">

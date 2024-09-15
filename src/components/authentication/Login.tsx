@@ -6,18 +6,14 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, error } = useContext(AuthContext);
+  const { login, authError } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    try {
-      const { success } = await login({ username, password });
-      if (success) {
-        navigate("/");
-      }
-    } catch (err) {
-      console.error("Unexpected error occurred:", err);
+    const { success } = await login({ username, password });
+    if (success) {
+      navigate("/");
     }
   };
 
@@ -48,7 +44,9 @@ const Login: React.FC = () => {
         >
           Login
         </button>
-        {error && <p className="mt-4 text-center text-red-500">{error}</p>}
+        {authError && (
+          <p className="mt-4 text-center text-red-500">{authError}</p>
+        )}
         <p className="mt-4 text-center">
           Don't have an account?{" "}
           <Link to="/register" className="text-blue-500">
