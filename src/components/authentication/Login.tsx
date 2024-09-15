@@ -1,17 +1,25 @@
-import React, { useState, FormEvent, useContext } from "react";
+import React, { useState, FormEvent, ChangeEvent, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
   const { login, authError } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const { success } = await login({ username, password });
+    const { success } = await login(formData);
     if (success) {
       navigate("/");
     }
@@ -27,15 +35,17 @@ const Login: React.FC = () => {
         <input
           type="text"
           placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          name="username"
+          value={formData?.username}
+          onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
         />
         <input
           type="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={formData?.password}
+          onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
         />
         <button

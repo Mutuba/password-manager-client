@@ -69,7 +69,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+      const response = await axios.post(`${API_BASE_URL}/auth/sign_up`, {
         user: userData,
       });
       const { auth_token, user } = response.data;
@@ -79,8 +79,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
       setUser(user);
 
       return { success: true, user };
-    } catch (error) {
-      const message = (error as any).response?.data?.error || "Login failed";
+    } catch (error: any) {
+      const message = error.response?.data?.error || "Registration failed";
       setAuthError(message);
       return { success: false };
     } finally {
@@ -104,7 +104,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
       return { success: true, user, message: "Login successful" };
     } catch (error: any) {
       setLoading(false);
-      const message = (error as any).response?.data?.error || "Login failed";
+      const message = error.response?.data?.error || "Login failed";
       setAuthError(message);
       return { success: false };
     } finally {

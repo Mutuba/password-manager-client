@@ -1,17 +1,24 @@
-import React, { useState, FormEvent, useContext } from "react";
+import React, { useState, FormEvent, ChangeEvent, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 const Register: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const { register, authError } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    username: "",
+    email: "",
+    password: "",
+  });
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const { success } = await register({ username, email, password });
+    const { success } = await register(formData);
     if (success) {
       navigate("/");
     }
@@ -26,23 +33,42 @@ const Register: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
         <input
           type="text"
+          placeholder="First Name"
+          name="first_name"
+          value={formData?.first_name}
+          onChange={handleChange}
+          className="mb-4 p-2 border border-gray-300 rounded w-full"
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          name="last_name"
+          value={formData?.last_name}
+          onChange={handleChange}
+          className="mb-4 p-2 border border-gray-300 rounded w-full"
+        />
+        <input
+          type="text"
           placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          name="username"
+          value={formData?.username}
+          onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
         />
         <input
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData?.email}
+          name="email"
+          onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
         />
         <input
           type="password"
+          name="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData?.password}
+          onChange={handleChange}
           className="mb-4 p-2 border border-gray-300 rounded w-full"
         />
         <button
