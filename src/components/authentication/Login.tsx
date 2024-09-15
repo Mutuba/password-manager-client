@@ -19,10 +19,12 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const { success } = await login(formData);
-    if (success) {
-      navigate("/");
-    }
+    try {
+      const { success } = await login(formData);
+      if (success) {
+        navigate("/");
+      }
+    } catch (error) {}
   };
 
   return (
@@ -57,7 +59,9 @@ const Login: React.FC = () => {
           Login
         </button>
         {authError && (
-          <p className="mt-4 text-center text-red-500">{authError}</p>
+          <p data-testid="error" className="mt-4 text-center text-red-500">
+            {authError}
+          </p>
         )}
         <p className="mt-4 text-center">
           Don't have an account?{" "}
