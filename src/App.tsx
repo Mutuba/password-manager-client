@@ -13,7 +13,7 @@ import Spinner from "./shared/Spinner";
 
 const App: React.FC = () => {
   return (
-    <AuthProvider initialState={{ user: null, userToken: null, loading: true }}>
+    <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<ProtectedRoute component={Home} />} />

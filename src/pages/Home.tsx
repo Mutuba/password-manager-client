@@ -1,14 +1,9 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import Spinner from "../shared/Spinner";
 import Navbar from "../shared/NavBar";
 
 const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
-
-  if (!authContext) {
-    return <Spinner />;
-  }
 
   const { user } = authContext;
 

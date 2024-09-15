@@ -11,7 +11,15 @@ import Spinner from "../shared/Spinner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  userToken: null,
+  error: null,
+  loading: true,
+  login: async () => ({ success: false }),
+  register: async () => ({ success: false }),
+  logout: () => {},
+});
 
 const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
   const [user, setUser] = useState<User | null>(initialState?.user ?? null);
@@ -20,6 +28,10 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
   );
   const [loading, setLoading] = useState<boolean>(
     initialState?.loading ?? true
+  );
+
+  const [error, setError] = useState<string | null>(
+    initialState?.error ?? null
   );
 
   useEffect(() => {
@@ -66,16 +78,11 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
       setUserToken(auth_token);
       setUser(user);
 
-      return {
-        success: true,
-        user,
-        message: "Congratulations! Your account just got created",
-      };
+      return { success: true, user };
     } catch (error) {
-      return {
-        success: false,
-        message: "An error occurred while registering.",
-      };
+      const message = (error as any).response?.data?.error || "Login failed";
+      setError(message);
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -95,9 +102,11 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
       setUser(user);
 
       return { success: true, user, message: "Login successful" };
-    } catch (error) {
-      const message = "Login failed";
-      return { success: false, message };
+    } catch (error: any) {
+      setLoading(false);
+      const message = (error as any).response?.data?.error || "Login failed";
+      setError(message);
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -111,11 +120,13 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, userToken, loading, login, register, logout }}
+      value={{ user, userToken, error, loading, login, register, logout }}
     >
       {loading ? (
         <div className="flex items-center justify-center h-screen">
-          <Spinner size="100" />
+          <div className="w-32 h-32">
+            <Spinner />
+          </div>
         </div>
       ) : (
         children

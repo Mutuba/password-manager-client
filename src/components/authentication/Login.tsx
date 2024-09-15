@@ -1,26 +1,23 @@
 import React, { useState, FormEvent, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { AuthContextType } from "../../types/AuthTypes";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
 
-  const { login } = useContext(AuthContext) as AuthContextType;
+  const { login, error } = useContext(AuthContext);
   const navigate = useNavigate();
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const { success, message } = await login({ username, password });
-
-    if (success) {
-      setMessage("Login successful");
-      navigate("/");
-    } else {
-      setMessage(message || "Login failed");
+    try {
+      const { success } = await login({ username, password });
+      if (success) {
+        navigate("/");
+      }
+    } catch (err) {
+      console.error("Unexpected error occurred:", err);
     }
   };
 
@@ -51,7 +48,7 @@ const Login: React.FC = () => {
         >
           Login
         </button>
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+        {error && <p className="mt-4 text-center text-red-500">{error}</p>}
         <p className="mt-4 text-center">
           Don't have an account?{" "}
           <Link to="/register" className="text-blue-500">
