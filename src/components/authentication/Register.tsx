@@ -81,7 +81,9 @@ const Register: React.FC = () => {
           Register
         </button>
         {authError && (
-          <p className="mt-4 text-center text-red-500">{authError}</p>
+          <p data-testid="error" className="mt-4 text-center text-red-500">
+            {authError}
+          </p>
         )}
         <p className="mt-4 text-center">
           Already have an account?{" "}
