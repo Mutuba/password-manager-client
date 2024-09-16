@@ -14,17 +14,13 @@ const Home: React.FC = () => {
           <h1 className="text-2xl font-bold text-center">
             Welcome to the Home Page!
           </h1>
-          {user ? (
+          {user && (
             <p className="text-gray-700 text-center">
               Hello,{" "}
               <span className="font-semibold">
-                {user.first_name || user.username}
+                {user?.first_name || user?.username}
               </span>
               ! You have successfully logged in.
-            </p>
-          ) : (
-            <p className="text-gray-700 text-center">
-              Loading user information...
             </p>
           )}
         </div>
