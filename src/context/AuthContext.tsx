@@ -1,4 +1,10 @@
-import { createContext, useState, useEffect, FC } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  FC,
+  useCallback,
+} from "react";
 import axios from "axios";
 import {
   AuthContextType,
@@ -29,7 +35,6 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
   const [loading, setLoading] = useState<boolean>(
     initialState?.loading ?? true
   );
-
   const [authError, setAuthError] = useState<string | null>(
     initialState?.error ?? null
   );
@@ -65,7 +70,7 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     checkSession();
   }, []);
 
-  const register = async (userData: RegisterData) => {
+  const register = useCallback(async (userData: RegisterData) => {
     setLoading(true);
 
     try {
@@ -86,9 +91,9 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const login = async (loginData: LoginData) => {
+  const login = useCallback(async (loginData: LoginData) => {
     setLoading(true);
 
     try {
@@ -103,20 +108,19 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
 
       return { success: true, user, message: "Login successful" };
     } catch (error: any) {
-      setLoading(false);
       const message = error.response?.data?.error || "Login failed";
       setAuthError(message);
       return { success: false };
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem("token");
     setUser(null);
     setUserToken(null);
-  };
+  }, []);
 
   return (
     <AuthContext.Provider

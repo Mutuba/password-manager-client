@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React, { ComponentType, useContext } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -29,16 +29,16 @@ interface ProtectedRouteProps {
   component: ComponentType;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  component: Component,
-}) => {
-  const authContext = React.useContext(AuthContext);
+const ProtectedRoute: React.FC<ProtectedRouteProps> = React.memo(
+  ({ component: Component }) => {
+    const { user, loading } = useContext(AuthContext);
 
-  if (!authContext || authContext.loading) {
-    return <Spinner size="100" />;
+    if (loading) {
+      return <Spinner size="100" />;
+    }
+
+    return user ? <Component /> : <Navigate to="/login" />;
   }
-
-  return authContext.user ? <Component /> : <Navigate to="/login" />;
-};
+);
 
 export default App;
