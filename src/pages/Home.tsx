@@ -3,25 +3,8 @@ import { AuthContext } from "../context/AuthContext";
 import Navbar from "../shared/NavBar";
 import Spinner from "../shared/Spinner";
 import { fetchVaults } from "../services/vaultService";
-
-interface Vault {
-  id: number;
-  type: string;
-  attributes: {
-    id: string;
-    name: string;
-    last_accessed_at: Date;
-    description: string;
-    vault_type: string;
-    shared_with: string[];
-    status: string;
-    access_count: number;
-    is_shared: boolean;
-    failed_attempts: number;
-    created_at: string;
-    updated_at: string;
-  };
-}
+import VaultModal from "../components/VaultModal";
+import { Vault } from "../types/VaultTypes";
 
 const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -30,6 +13,7 @@ const Home: React.FC = () => {
   const [vaults, setVaults] = useState<Vault[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     const getVaults = async () => {
@@ -54,13 +38,15 @@ const Home: React.FC = () => {
     getVaults();
   }, []);
 
-  const handleCreateVault = () => {
-    console.log("Create a new vault");
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <Navbar />
+      <VaultModal
+        visible={modalVisible}
+        setModalVisible={setModalVisible}
+        onClose={() => setModalVisible(false)}
+        setVaults={setVaults}
+      />
       <main className="flex-grow flex flex-col items-center justify-center p-6 space-y-8">
         <div className="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4">
           {user && (
@@ -78,7 +64,7 @@ const Home: React.FC = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">Your Vaults</h2>
             <button
-              onClick={handleCreateVault}
+              onClick={() => setModalVisible(true)}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Create New Vault
