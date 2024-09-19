@@ -10,7 +10,7 @@ export interface CreateVaultData {
 
 export interface Vault {
   id: number;
-  type: string;
+  type: "vault";
   attributes: {
     id: number;
     name: string;
@@ -22,7 +22,33 @@ export interface Vault {
     access_count: number;
     is_shared: boolean;
     failed_attempts: number;
+    unlock_code?: string;
     created_at: string;
     updated_at: string;
   };
+}
+
+export interface PasswordRecordAttributes {
+  name: string;
+  username: string;
+  url: string | null;
+  notes: string | null;
+  password: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PasswordRecord {
+  id: string;
+  type: "password_record";
+  attributes: PasswordRecordAttributes;
+}
+export interface VaultAttributes {
+  name: string;
+  description: string | null;
+  vault_type: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  unlock_code?: string;
 }

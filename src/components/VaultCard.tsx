@@ -1,13 +1,50 @@
-import React from "react";
-import { Vault } from "../types/VaultTypes";
+import React, { useState, useContext } from "react";
+import { Vault, PasswordRecord } from "../types/VaultTypes";
+import PasswordRecordList from "./PasswordRecordList";
+import { vaultLogin } from "../services/vaultService";
+import { AuthContext } from "../context/AuthContext";
+import Spinner from "../shared/Spinner";
 
 interface VaultCardProps {
   vault: Vault;
 }
 
 const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
-  const handleAccessVault = (id: number) => {
-    console.log("Access Vault", id);
+  const authContext = useContext(AuthContext);
+  const { userToken } = authContext;
+  const [records, setRecords] = useState<PasswordRecord[] | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
+  const [unlockCode, setUnlockCode] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleAccessVault = async (vaultId: number) => {
+    setErrors([""]);
+    if (!userToken) {
+      setErrors(["User token is missing."]);
+      setLoading(false);
+      return;
+    }
+    if (!unlockCode) {
+      setErrors(["Unlock code is required to access vault."]);
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await vaultLogin(userToken, vaultId, {
+        unlock_code: unlockCode,
+      });
+      setRecords(response.data);
+      setErrors([""]);
+    } catch (err: any) {
+      if (Array.isArray(err)) {
+        setErrors(err);
+      } else {
+        setErrors([err]);
+      }
+      setRecords(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,13 +65,32 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
         Created At: {new Date(vault.attributes.created_at).toLocaleString()}
       </p>
       <div className="mt-4">
+        <input
+          type="text"
+          value={unlockCode}
+          required
+          onChange={(e) => setUnlockCode(e.target.value)}
+          placeholder="Enter unlock code"
+          className="border border-gray-300 rounded p-2 mb-2 w-full"
+        />
+        {loading && <Spinner />}
         <button
-          className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+          className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 w-full"
           onClick={() => handleAccessVault(vault.id)}
         >
           Access Vault
         </button>
       </div>
+      {errors.length > 0 && (
+        <div className="mb-4">
+          <ul className="text-red-500">
+            {errors.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {records && <PasswordRecordList records={records} />}
     </div>
   );
 };

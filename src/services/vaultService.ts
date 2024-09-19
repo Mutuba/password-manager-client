@@ -33,15 +33,37 @@ export const createVault = async (
   }
 };
 
+export const vaultLogin = async (
+  userToken: string,
+  vaultId: number,
+  vaultData: { unlock_code: string }
+) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/vaults/${vaultId}/login`,
+      vaultData,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error);
+  }
+};
+
 const handleApiError = (error: any) => {
   if (axios.isAxiosError(error)) {
     if (error.response) {
-      const { status, data } = error.response;
-      if (status === 401) {
-        throw new Error("Unauthorized. Please log in again.");
-      }
+      const { data } = error.response;
       if (data?.errors) {
         throw data?.errors;
+      }
+      if (data?.error) {
+        throw data?.error;
       }
       throw new Error("Something went wrong. Please try again.");
     } else if (error.request) {
