@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import Navbar from "../shared/NavBar";
 import Spinner from "../shared/Spinner";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { fetchVaults } from "../services/vaultService";
 
 interface Vault {
   id: number;
@@ -34,34 +32,31 @@ const Home: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchVaults = async () => {
+    const getVaults = async () => {
       setLoading(true);
       setError(null);
+
+      if (!userToken) {
+        setError("User token is missing.");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await axios.get(`${API_BASE_URL}/vaults`, {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-        setVaults(response.data.data);
-      } catch (err) {
-        setError("Failed to fetch vaults. Please try again later.");
+        const vaultsData = await fetchVaults(userToken);
+        setVaults(vaultsData);
+      } catch (err: any) {
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
-    if (user) {
-      fetchVaults();
-    }
-    console.log("useEffect running");
+    getVaults();
   }, []);
 
   const handleCreateVault = () => {
     console.log("Create a new vault");
   };
-
-  console.log("After loadings", vaults);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
