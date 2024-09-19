@@ -43,7 +43,6 @@ const Navbar: React.FC = () => {
     <nav className="bg-blue-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
-          {/* Logo */}
           <div className="flex items-center">
             <img
               className="h-12 w-12"
@@ -51,13 +50,11 @@ const Navbar: React.FC = () => {
               alt="Password Guardian Logo"
             />
           </div>
-          {/* Centered App Name */}
           <div className="flex-1 flex justify-center items-center">
             <span className="text-white text-3xl font-bold">
               Password Guardian
             </span>
           </div>
-          {/* Profile Dropdown */}
           <div className="flex items-center pr-2 sm:ml-6 sm:pr-0">
             <div className="relative" ref={dropdownRef}>
               <button
@@ -80,7 +77,6 @@ const Navbar: React.FC = () => {
                 />
               </button>
 
-              {/* Dropdown menu */}
               {isMenuOpen && (
                 <div
                   className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
