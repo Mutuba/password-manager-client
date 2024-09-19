@@ -40,9 +40,8 @@ const handleApiError = (error: any) => {
       if (status === 401) {
         throw new Error("Unauthorized. Please log in again.");
       }
-
-      if (data?.message) {
-        throw new Error(data.message);
+      if (data?.errors) {
+        throw data?.errors;
       }
       throw new Error("Something went wrong. Please try again.");
     } else if (error.request) {

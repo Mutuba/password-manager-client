@@ -7,22 +7,23 @@ import Spinner from "../shared/Spinner";
 interface VaultModalProps {
   visible: boolean;
   setModalVisible: Dispatch<SetStateAction<boolean>>;
+  setVaultsUpdated: Dispatch<SetStateAction<boolean>>;
   onClose: () => void;
   setVaults: Dispatch<SetStateAction<Vault[]>>;
 }
 
 const vaultTypeOptions = [
   { value: 0, label: "Personal" },
-  { value: 0, label: "Business" },
-  { value: 0, label: "Shared" },
-  { value: 1, label: "Temporary" },
+  { value: 1, label: "Business" },
+  { value: 2, label: "Shared" },
+  { value: 3, label: "Temporary" },
 ];
 
 const statusOptions = [
   { value: 0, label: "Active" },
   { value: 1, label: "Archived" },
-  { value: 1, label: "Deleted" },
-  { value: 1, label: "Locked" },
+  { value: 2, label: "Deleted" },
+  { value: 3, label: "Locked" },
 ];
 
 const VaultModal: React.FC<VaultModalProps> = ({
@@ -30,12 +31,12 @@ const VaultModal: React.FC<VaultModalProps> = ({
   onClose,
   setModalVisible,
   setVaults,
+  setVaultsUpdated,
 }) => {
   const authContext = useContext(AuthContext);
   const { userToken } = authContext;
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
   const [name, setName] = useState<string>("");
   const [unlockCode, setUnlockCode] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -46,9 +47,9 @@ const VaultModal: React.FC<VaultModalProps> = ({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    setErrors([]);
     if (!userToken) {
-      setError("User token is missing.");
+      setErrors(["User token is missing."]);
       setLoading(false);
       return;
     }
@@ -63,13 +64,30 @@ const VaultModal: React.FC<VaultModalProps> = ({
         status,
         is_shared: isShared,
       });
+      resetForm();
       setVaults((prevVaults) => [...prevVaults, vaultData]);
-      setModalVisible(false);
+      onClose();
+      setVaultsUpdated((prev) => !prev);
     } catch (err: any) {
-      setError(err.message);
+      if (Array.isArray(err)) {
+        setErrors(err);
+      } else {
+        setErrors([err]);
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  const resetForm = () => {
+    setName("");
+    setUnlockCode("");
+    setDescription("");
+    setVaultType(0);
+    setSharedWith([]);
+    setStatus(0);
+    setIsShared(false);
+    setModalVisible(false);
   };
 
   if (!visible) return null;
@@ -79,7 +97,15 @@ const VaultModal: React.FC<VaultModalProps> = ({
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h3 className="text-lg font-semibold mb-4">Create New Vault</h3>
         {loading && <Spinner />}
-        {error && <p className="text-red-500">{error}</p>}
+        {errors.length > 0 && (
+          <div className="mb-4">
+            <ul className="text-red-500">
+              {errors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 mb-2" htmlFor="vaultName">

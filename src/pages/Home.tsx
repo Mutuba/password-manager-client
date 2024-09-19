@@ -9,34 +9,35 @@ import { Vault } from "../types/VaultTypes";
 const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
   const { user, userToken } = authContext;
-
   const [vaults, setVaults] = useState<Vault[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [vaultsUpdated, setVaultsUpdated] = useState<boolean>(false);
+
+  const fetchAllVaults = async () => {
+    setLoading(true);
+    setError(null);
+
+    if (!userToken) {
+      setError("User token is missing.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const vaultsData = await fetchVaults(userToken);
+      setVaults(vaultsData);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getVaults = async () => {
-      setLoading(true);
-      setError(null);
-
-      if (!userToken) {
-        setError("User token is missing.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const vaultsData = await fetchVaults(userToken);
-        setVaults(vaultsData);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getVaults();
-  }, []);
+    fetchAllVaults();
+  }, [vaultsUpdated]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
@@ -46,6 +47,7 @@ const Home: React.FC = () => {
         setModalVisible={setModalVisible}
         onClose={() => setModalVisible(false)}
         setVaults={setVaults}
+        setVaultsUpdated={setVaultsUpdated}
       />
       <main className="flex-grow flex flex-col items-center justify-center p-6 space-y-8">
         <div className="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4">
@@ -83,22 +85,22 @@ const Home: React.FC = () => {
                     className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:shadow-md"
                   >
                     <h3 className="text-lg font-semibold text-gray-800">
-                      {vault.attributes.name}
+                      {vault?.attributes?.name}
                     </h3>
-                    {vault.attributes.description && (
+                    {vault?.attributes?.description && (
                       <p className="text-sm text-gray-600">
-                        {vault.attributes.description}
+                        {vault?.attributes?.description}
                       </p>
                     )}
                     <p className="text-xs text-gray-500">
-                      Type: {vault.attributes.vault_type}
+                      Type: {vault?.attributes?.vault_type}
                     </p>
                     <p className="text-xs text-gray-500">
-                      Status: {vault.attributes.status}
+                      Status: {vault?.attributes?.status}
                     </p>
                     <p className="text-xs text-gray-500">
                       Created At:{" "}
-                      {new Date(vault.attributes.created_at).toLocaleString()}
+                      {new Date(vault?.attributes?.created_at).toLocaleString()}
                     </p>
                     <div className="mt-4">
                       <button
