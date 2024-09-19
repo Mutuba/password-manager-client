@@ -142,6 +142,7 @@ const VaultModal: React.FC<VaultModalProps> = ({
             </label>
             <textarea
               id="vaultDescription"
+              required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded"
