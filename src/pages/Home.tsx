@@ -5,6 +5,7 @@ import Spinner from "../shared/Spinner";
 import { fetchVaults } from "../services/vaultService";
 import VaultModal from "../components/VaultModal";
 import { Vault } from "../types/VaultTypes";
+import VaultCard from "../components/VaultCard";
 
 const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -80,37 +81,7 @@ const Home: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {vaults.length > 0 ? (
                 vaults.map((vault: Vault) => (
-                  <div
-                    key={vault.id}
-                    className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:shadow-md"
-                  >
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      {vault?.attributes?.name}
-                    </h3>
-                    {vault?.attributes?.description && (
-                      <p className="text-sm text-gray-600">
-                        {vault?.attributes?.description}
-                      </p>
-                    )}
-                    <p className="text-xs text-gray-500">
-                      Type: {vault?.attributes?.vault_type}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Status: {vault?.attributes?.status}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Created At:{" "}
-                      {new Date(vault?.attributes?.created_at).toLocaleString()}
-                    </p>
-                    <div className="mt-4">
-                      <button
-                        className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-                        onClick={() => console.log("Access Vault", vault.id)}
-                      >
-                        Access Vault
-                      </button>
-                    </div>
-                  </div>
+                  <VaultCard key={vault.id} vault={vault} />
                 ))
               ) : (
                 <p className="text-gray-600">You don't have any vaults yet.</p>

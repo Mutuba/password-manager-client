@@ -12,7 +12,7 @@ export interface Vault {
   id: number;
   type: string;
   attributes: {
-    id: string;
+    id: number;
     name: string;
     last_accessed_at: Date;
     description: string;
