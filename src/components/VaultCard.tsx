@@ -18,6 +18,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleAccessVault = async (vaultId: number) => {
+    setLoading(true);
     setErrors([""]);
     if (!userToken) {
       setErrors(["User token is missing."]);
@@ -35,12 +36,9 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
       });
       setRecords(response.data);
       setErrors([""]);
+      setUnlockCode("");
     } catch (err: any) {
-      if (Array.isArray(err)) {
-        setErrors(err);
-      } else {
-        setErrors([err]);
-      }
+      setErrors(Array.isArray(err) ? err : [err]);
       setRecords(null);
     } finally {
       setLoading(false);

@@ -69,11 +69,7 @@ const VaultModal: React.FC<VaultModalProps> = ({
       onClose();
       setVaultsUpdated((prev) => !prev);
     } catch (err: any) {
-      if (Array.isArray(err)) {
-        setErrors(err);
-      } else {
-        setErrors([err]);
-      }
+      setErrors(Array.isArray(err) ? err : [err]);
     } finally {
       setLoading(false);
     }
