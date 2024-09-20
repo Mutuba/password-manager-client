@@ -39,7 +39,7 @@ export interface PasswordRecordAttributes {
 }
 
 export interface PasswordRecord {
-  id: string;
+  id: number;
   type: "password_record";
   attributes: PasswordRecordAttributes;
 }

@@ -88,7 +88,9 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
           </ul>
         </div>
       )}
-      {records && <PasswordRecordList records={records} />}
+      {records && (
+        <PasswordRecordList records={records} userToken={userToken} />
+      )}
     </div>
   );
 };

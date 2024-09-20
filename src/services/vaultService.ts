@@ -55,6 +55,28 @@ export const vaultLogin = async (
   }
 };
 
+export const decryptPassword = async (
+  userToken: string,
+  passwordRecordId: number,
+  passwordRecordData: { encryption_key: string }
+) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/password_records/${passwordRecordId}/decrypt_password`,
+      passwordRecordData,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error);
+  }
+};
+
 const handleApiError = (error: any) => {
   if (axios.isAxiosError(error)) {
     if (error.response) {
