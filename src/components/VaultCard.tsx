@@ -16,17 +16,15 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [unlockCode, setUnlockCode] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [isVaultOpen, setIsVaultOpen] = useState<boolean>(false); // Track vault access state
+  const [isVaultOpen, setIsVaultOpen] = useState<boolean>(false);
 
   const handleAccessVault = async (vaultId: number) => {
     if (isVaultOpen) {
-      // Close the vault
       setRecords(null);
       setIsVaultOpen(false);
       return;
     }
 
-    // Open the vault
     setLoading(true);
     setErrors([""]);
     if (!userToken) {
@@ -44,7 +42,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
         unlock_code: unlockCode,
       });
       setRecords(response.data);
-      setIsVaultOpen(true); // Set vault as open
+      setIsVaultOpen(true);
       setErrors([""]);
       setUnlockCode("");
     } catch (err: any) {
