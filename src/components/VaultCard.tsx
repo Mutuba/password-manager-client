@@ -16,8 +16,17 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [unlockCode, setUnlockCode] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isVaultOpen, setIsVaultOpen] = useState<boolean>(false); // Track vault access state
 
   const handleAccessVault = async (vaultId: number) => {
+    if (isVaultOpen) {
+      // Close the vault
+      setRecords(null);
+      setIsVaultOpen(false);
+      return;
+    }
+
+    // Open the vault
     setLoading(true);
     setErrors([""]);
     if (!userToken) {
@@ -26,7 +35,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
       return;
     }
     if (!unlockCode) {
-      setErrors(["Unlock code is required to access vault."]);
+      setErrors(["Unlock code is required to access the vault."]);
       setLoading(false);
       return;
     }
@@ -35,6 +44,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
         unlock_code: unlockCode,
       });
       setRecords(response.data);
+      setIsVaultOpen(true); // Set vault as open
       setErrors([""]);
       setUnlockCode("");
     } catch (err: any) {
@@ -62,21 +72,27 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
       <p className="text-xs text-gray-500">
         Created At: {new Date(vault.attributes.created_at).toLocaleString()}
       </p>
+      <p className="text-xs text-gray-500">
+        Last Accessed At:{" "}
+        {new Date(vault.attributes.last_accessed_at).toLocaleString()}
+      </p>
       <div className="mt-4">
-        <input
-          type="text"
-          value={unlockCode}
-          required
-          onChange={(e) => setUnlockCode(e.target.value)}
-          placeholder="Enter unlock code"
-          className="border border-gray-300 rounded p-2 mb-2 w-full"
-        />
+        {!isVaultOpen && (
+          <input
+            type="text"
+            value={unlockCode}
+            required
+            onChange={(e) => setUnlockCode(e.target.value)}
+            placeholder="Enter unlock code"
+            className="border border-gray-300 rounded p-2 mb-2 w-full"
+          />
+        )}
         {loading && <Spinner />}
         <button
           className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 w-full"
           onClick={() => handleAccessVault(vault.id)}
         >
-          Access Vault
+          {isVaultOpen ? "Close Vault" : "Access Vault"}
         </button>
       </div>
       {errors.length > 0 && (
@@ -88,7 +104,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault }) => {
           </ul>
         </div>
       )}
-      {records && (
+      {isVaultOpen && records && (
         <PasswordRecordList records={records} userToken={userToken} />
       )}
     </div>
