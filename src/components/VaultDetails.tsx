@@ -17,7 +17,7 @@ const VaultDetails: React.FC = () => {
   const [isVaultOpen, setIsVaultOpen] = useState<boolean>(false);
   const [vault, setVault] = useState<Vault | null>(null);
 
-  const navigate = useNavigate(); // Import useNavigate hook
+  const navigate = useNavigate();
 
   const handleVaultAccess = async () => {
     if (isVaultOpen) {
