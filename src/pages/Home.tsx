@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import Navbar from "../shared/NavBar";
 import Spinner from "../shared/Spinner";
 import { fetchVaults } from "../services/vaultService";
 import VaultModal from "../components/VaultModal";
@@ -42,7 +41,6 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <Navbar />
       <VaultModal
         visible={modalVisible}
         setModalVisible={setModalVisible}

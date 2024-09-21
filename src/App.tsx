@@ -10,16 +10,22 @@ import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import Spinner from "./shared/Spinner";
+import Navbar from "./shared/NavBar";
+import VaultDetails from "./components/VaultDetails";
 
 const App: React.FC = () => {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          <Route path="/" element={<ProtectedRoute component={Home} />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+        <div className="min-h-screen flex flex-col bg-gray-100">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<ProtectedRoute component={Home} />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/vault/:id/details" element={<VaultDetails />} />
+          </Routes>
+        </div>
       </Router>
     </AuthProvider>
   );
