@@ -23,7 +23,10 @@ const App: React.FC = () => {
             <Route path="/" element={<ProtectedRoute component={Home} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/vault/:id/details" element={<VaultDetails />} />
+            <Route
+              path="/vault/:id/details"
+              element={<ProtectedRoute component={VaultDetails} />}
+            />
           </Routes>
         </div>
       </Router>
