@@ -4,6 +4,7 @@ import { Vault } from "../types/VaultTypes";
 import { deleteVault } from "../services/vaultService";
 import ConfirmationModal from "../shared/ConfirmationModal";
 import { AuthContext } from "../context/AuthContext";
+import Spinner from "../shared/Spinner";
 
 interface VaultCardProps {
   vault: Vault;
@@ -19,6 +20,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleDelete = async () => {
+    setLoading(true);
     setErrors([]);
     if (!userToken) {
       setErrors(["User token is missing."]);
@@ -40,6 +42,17 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
   return (
     <div className="bg-white border border-gray-300 rounded-xl p-6 hover:shadow-lg transition-shadow duration-300 max-w-sm">
       <h3 className="text-xl font-bold text-gray-900 mb-2">
+        {loading && <Spinner />}
+        {errors.length > 0 && (
+          <div className="mb-4">
+            <ul className="text-red-500">
+              {errors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {vault?.attributes?.name}
       </h3>
       {vault?.attributes?.description && (
