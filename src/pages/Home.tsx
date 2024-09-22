@@ -40,7 +40,7 @@ const Home: React.FC = () => {
   }, [vaultsUpdated]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <VaultModal
         visible={modalVisible}
         setModalVisible={setModalVisible}
