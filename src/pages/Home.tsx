@@ -79,7 +79,11 @@ const Home: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {vaults.length > 0 ? (
                 vaults.map((vault: Vault) => (
-                  <VaultCard key={vault.id} vault={vault} />
+                  <VaultCard
+                    key={vault.id}
+                    vault={vault}
+                    setVaultsUpdated={setVaultsUpdated}
+                  />
                 ))
               ) : (
                 <p className="text-gray-600">You don't have any vaults yet.</p>

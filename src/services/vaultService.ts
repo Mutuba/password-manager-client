@@ -55,6 +55,19 @@ export const vaultLogin = async (
   }
 };
 
+export const deleteVault = async (userToken: string, vaultId: number) => {
+  try {
+    return await axios.delete(`${API_BASE_URL}/vaults/${vaultId}/`, {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error: any) {
+    handleApiError(error);
+  }
+};
+
 export const decryptPassword = async (
   userToken: string,
   passwordRecordId: number,
