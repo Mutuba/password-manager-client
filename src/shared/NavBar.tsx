@@ -20,11 +20,6 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      /*
-        Checks if the clicked target (event.target) is inside the dropdown element.
-        Condition: If the dropdown element (dropdownRef.current) exists and does not contain
-        the clicked target (event.target), it means the user clicked outside the dropdown.
-      */
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
@@ -38,6 +33,11 @@ const Navbar: React.FC = () => {
   }, []);
 
   const { user } = authContext;
+
+  // Only render the Navbar if the user is defined
+  if (!user) {
+    return null;
+  }
 
   return (
     <nav className="bg-blue-800">
@@ -68,11 +68,7 @@ const Navbar: React.FC = () => {
                 <span className="sr-only">Open user menu</span>
                 <img
                   className="h-8 w-8 rounded-full"
-                  src={
-                    user
-                      ? `https://i.pravatar.cc/150?img=${user.username}`
-                      : "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  }
+                  src={`https://i.pravatar.cc/150?img=${user.username}`}
                   alt="User Avatar"
                 />
               </button>
