@@ -65,7 +65,20 @@ const VaultDetails: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
+      <div className="relative bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
+        {isVaultOpen && (
+          <button
+            className="absolute top-4 right-4 flex items-center bg-blue-600 text-white px-3 py-1 rounded-full shadow-lg hover:bg-red-700 transition"
+            onClick={() => {
+              setIsVaultOpen(false);
+              setRecords(null);
+            }}
+          >
+            <span className="text-xl mr-1">✕</span>
+            Close
+          </button>
+        )}
+
         {vault && (
           <>
             <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
@@ -109,12 +122,14 @@ const VaultDetails: React.FC = () => {
             />
           )}
           {loading && <Spinner />}
-          <button
-            className="bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition-colors w-full font-semibold"
-            onClick={handleVaultAccess}
-          >
-            {isVaultOpen ? "Close Vault" : "Access Vault"}
-          </button>
+          {!isVaultOpen && (
+            <button
+              className="bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition-colors w-full font-semibold"
+              onClick={handleVaultAccess}
+            >
+              Access Vault
+            </button>
+          )}
         </div>
 
         {errors.length > 0 && (

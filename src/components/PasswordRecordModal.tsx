@@ -103,7 +103,7 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 className="text-lg font-bold">Add New Password Record</h2>
+        <h2 className="text-lg font-bold">Add New Record</h2>
         <div className="mt-2">
           <div className="mb-4">
             <input
