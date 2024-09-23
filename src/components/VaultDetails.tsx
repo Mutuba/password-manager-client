@@ -65,27 +65,28 @@ const VaultDetails: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="relative bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
+      <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
         {isVaultOpen && (
-          <button
-            className="absolute top-4 right-4 flex items-center bg-blue-600 text-white px-3 py-1 rounded-full shadow-lg hover:bg-red-700 transition"
-            onClick={() => {
-              setIsVaultOpen(false);
-              setRecords(null);
-            }}
-          >
-            <span className="text-xl mr-1">✕</span>
-            Close
-          </button>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-2xl font-bold text-gray-900">
+              {vault?.attributes?.name}
+            </h3>
+            <button
+              className="bg-red-600 text-white px-3 py-1 rounded-full shadow-lg hover:bg-red-700 transition"
+              onClick={() => {
+                setIsVaultOpen(false);
+                setRecords(null);
+              }}
+            >
+              <span className="text-xl">✕</span> Close
+            </button>
+          </div>
         )}
 
         {vault && (
           <>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-              {vault.attributes?.name}
-            </h3>
             {vault.attributes?.description && (
-              <p className="text-sm text-gray-700 mb-6 text-center">
+              <p className="text-sm text-gray-700 mb-6">
                 {vault.attributes.description}
               </p>
             )}

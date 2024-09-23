@@ -103,14 +103,14 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
   return (
     <div className="p-4 bg-white border border-gray-200 rounded-xl shadow-md">
       <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-300">
-        <h4 className="text-2xl font-bold text-gray-900 tracking-wide">
-          Records
+        <h4 className="text-2xl font-bold text-gray-900 tracking-wide text-center">
+          Vault Records
         </h4>
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
           onClick={() => setShowAddRecordModal(true)}
         >
-          + New Record
+          + Record
         </button>
       </div>
 
