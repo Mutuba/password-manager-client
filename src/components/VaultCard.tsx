@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
-import React, { useState, useContext, Dispatch, SetStateAction } from "react";
+import React, {
+  useState,
+  useContext,
+  Dispatch,
+  SetStateAction,
+  useRef,
+  useEffect,
+} from "react";
 import { Vault } from "../types/VaultTypes";
 import { deleteVault } from "../services/vaultService";
 import ConfirmationModal from "../shared/ConfirmationModal";
@@ -21,6 +28,26 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isActionsVisible, setIsActionsVisible] = useState(false);
+
+  const ActionsVisibleRef = useRef<HTMLDivElement>(null);
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      ActionsVisibleRef.current &&
+      !ActionsVisibleRef.current.contains(event.target as Node)
+    ) {
+      setIsActionsVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isActionsVisible) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isActionsVisible]);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -77,7 +104,6 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         Access Vault
       </Link>
 
-      {/* Action Button (Ellipsis) */}
       <button
         className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
         onClick={() => setIsActionsVisible(!isActionsVisible)}
@@ -85,9 +111,11 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         <FaEllipsisV />
       </button>
 
-      {/* Action Menu */}
       {isActionsVisible && (
-        <div className="absolute right-3 top-10 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+        <div
+          ref={ActionsVisibleRef}
+          className="absolute right-3 top-10 bg-white border border-gray-300 rounded-lg shadow-lg z-10"
+        >
           <button
             onClick={() => setIsVaultModalOpen(true)}
             className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
