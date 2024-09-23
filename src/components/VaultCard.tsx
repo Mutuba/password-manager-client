@@ -131,7 +131,6 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <ConfirmationModal
           isOpen={isDeleteModalOpen}
@@ -148,7 +147,6 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         />
       )}
 
-      {/* Update Vault Modal */}
       {isVaultModalOpen && (
         <VaultModal
           visible={isVaultModalOpen}

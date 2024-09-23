@@ -1,5 +1,6 @@
 import axios from "axios";
 import { CreateVaultData } from "../types/VaultTypes";
+import { handleApiError } from "./errorHandler";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -87,50 +88,5 @@ export const deleteVault = async (userToken: string, vaultId: number) => {
     });
   } catch (error: any) {
     handleApiError(error);
-  }
-};
-
-export const decryptPassword = async (
-  userToken: string,
-  passwordRecordId: number,
-  passwordRecordData: { encryption_key: string }
-) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/password_records/${passwordRecordId}/decrypt_password`,
-      passwordRecordData,
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error);
-  }
-};
-
-const handleApiError = (error: any) => {
-  if (axios.isAxiosError(error)) {
-    if (error.response) {
-      const { data } = error.response;
-      if (data?.errors) {
-        throw data?.errors;
-      }
-      if (data?.error) {
-        throw data?.error;
-      }
-      throw new Error("Something went wrong. Please try again.");
-    } else if (error.request) {
-      throw new Error(
-        "Unable to connect to the server. Please check your internet connection."
-      );
-    } else {
-      throw new Error("An unexpected error occurred. Please try again.");
-    }
-  } else {
-    throw new Error("An unexpected error occurred.");
   }
 };

@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Vault, PasswordRecord } from "../types/VaultTypes";
+import { Vault } from "../types/VaultTypes";
+import { PasswordRecord } from "../types/PasswordRecordTypes";
+
 import PasswordRecordList from "./PasswordRecordList";
 import { vaultLogin } from "../services/vaultService";
 import { AuthContext } from "../context/AuthContext";

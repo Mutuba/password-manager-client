@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { PasswordRecord } from "../types/VaultTypes";
-import { decryptPassword } from "../services/vaultService";
+import { PasswordRecord } from "../types//PasswordRecordTypes";
+import { decryptPassword } from "../services/passwordRecordService";
 import Spinner from "../shared/Spinner";
 
 interface PasswordRecordListProps {
