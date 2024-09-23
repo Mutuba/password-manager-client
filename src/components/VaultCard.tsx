@@ -6,6 +6,7 @@ import ConfirmationModal from "../shared/ConfirmationModal";
 import VaultModal from "./VaultModal";
 import { AuthContext } from "../context/AuthContext";
 import Spinner from "../shared/Spinner";
+import { FaEllipsisV, FaEdit, FaTrashAlt } from "react-icons/fa";
 
 interface VaultCardProps {
   vault: Vault;
@@ -19,6 +20,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
   const [isVaultModalOpen, setIsVaultModalOpen] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isActionsVisible, setIsActionsVisible] = useState(false);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -41,7 +43,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
   };
 
   return (
-    <div className="bg-white border border-gray-300 rounded-xl p-6 hover:shadow-lg transition-shadow duration-300 max-w-sm">
+    <div className="bg-white border border-gray-300 rounded-xl p-6 hover:shadow-lg transition-shadow duration-300 max-w-sm relative">
       <h3 className="text-xl font-bold text-gray-900 mb-2">
         {loading && <Spinner />}
         {errors.length > 0 && (
@@ -53,7 +55,6 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
             </ul>
           </div>
         )}
-
         {vault?.attributes?.name}
       </h3>
       {vault?.attributes?.description && (
@@ -69,29 +70,40 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         <span className="font-medium">Status:</span> {vault?.attributes?.status}
       </p>
 
-      <div className="flex flex-col space-y-2">
-        <Link
-          to={`/vault/${vault?.id}/details`}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200 w-full text-center"
-        >
-          Access Vault
-        </Link>
+      <Link
+        to={`/vault/${vault?.id}/details`}
+        className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200 w-full text-center"
+      >
+        Access Vault
+      </Link>
 
-        <button
-          onClick={() => setIsVaultModalOpen(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200 w-full"
-        >
-          Update Vault
-        </button>
+      {/* Action Button (Ellipsis) */}
+      <button
+        className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+        onClick={() => setIsActionsVisible(!isActionsVisible)}
+      >
+        <FaEllipsisV />
+      </button>
 
-        <button
-          onClick={() => setIsDeleteModalOpen(true)}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition-colors duration-200 w-full"
-        >
-          Delete Vault
-        </button>
-      </div>
+      {/* Action Menu */}
+      {isActionsVisible && (
+        <div className="absolute right-3 top-10 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+          <button
+            onClick={() => setIsVaultModalOpen(true)}
+            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+          >
+            <FaEdit /> <span>Update Vault</span>
+          </button>
+          <button
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+          >
+            <FaTrashAlt /> <span>Delete Vault</span>
+          </button>
+        </div>
+      )}
 
+      {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <ConfirmationModal
           isOpen={isDeleteModalOpen}
@@ -108,6 +120,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         />
       )}
 
+      {/* Update Vault Modal */}
       {isVaultModalOpen && (
         <VaultModal
           visible={isVaultModalOpen}
