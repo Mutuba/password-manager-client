@@ -151,12 +151,14 @@ const VaultDetails: React.FC = () => {
         )}
 
         {isVaultOpen && (
-          <button
-            className="mt-6 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors w-full font-semibold"
-            onClick={() => navigate("/")}
-          >
-            Back to Home
-          </button>
+          <div className="mt-6 flex justify-center">
+            <button
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+              onClick={() => navigate("/")}
+            >
+              Back to Home
+            </button>
+          </div>
         )}
       </div>
     </div>
