@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -16,11 +16,27 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      onCancel();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+      <div ref={modalRef} className="bg-white rounded-lg p-6 max-w-sm w-full">
         <h2 className="text-xl font-bold text-gray-900 mb-4">{title}</h2>
         <p className="text-gray-700 mb-6">{message}</p>
         <div className="flex justify-end space-x-4">

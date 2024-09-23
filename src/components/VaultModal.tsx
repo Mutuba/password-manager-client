@@ -1,6 +1,13 @@
-import React, { useState, useContext, Dispatch, SetStateAction } from "react";
+import React, {
+  useState,
+  useContext,
+  Dispatch,
+  SetStateAction,
+  useRef,
+  useEffect,
+} from "react";
 import { AuthContext } from "../context/AuthContext";
-import { createVault } from "../services/vaultService";
+import { createVault, updateVault } from "../services/vaultService";
 import { Vault } from "../types/VaultTypes";
 import Spinner from "../shared/Spinner";
 
@@ -10,8 +17,8 @@ interface VaultModalProps {
   setVaultsUpdated: Dispatch<SetStateAction<boolean>>;
   onClose: () => void;
   setVaults: Dispatch<SetStateAction<Vault[]>>;
+  vault?: Vault;
 }
-
 const vaultTypeOptions = [
   { value: 0, label: "Personal" },
   { value: 1, label: "Business" },
@@ -32,18 +39,33 @@ const VaultModal: React.FC<VaultModalProps> = ({
   setModalVisible,
   setVaults,
   setVaultsUpdated,
+  vault,
 }) => {
   const authContext = useContext(AuthContext);
   const { userToken } = authContext;
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [name, setName] = useState<string>("");
-  const [unlockCode, setUnlockCode] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [vaultType, setVaultType] = useState<number>(0);
-  const [sharedWith, setSharedWith] = useState<string[]>([]);
-  const [status, setStatus] = useState<number>(0);
-  const [isShared, setIsShared] = useState<boolean>(false);
+  const [name, setName] = useState<string>(vault?.attributes.name || "");
+  const [unlockCode, setUnlockCode] = useState<string>(
+    vault?.attributes.unlock_code || ""
+  );
+  const [description, setDescription] = useState<string>(
+    vault?.attributes.description || ""
+  );
+  const [vaultType, setVaultType] = useState<number>(
+    vault?.attributes.vault_type ? Number(vault?.attributes.vault_type) : 0
+  );
+  const [sharedWith, setSharedWith] = useState<string[]>(
+    vault?.attributes.shared_with || []
+  );
+  const [status, setStatus] = useState<number>(
+    vault?.attributes.status ? Number(vault?.attributes.status) : 0
+  );
+  const [isShared, setIsShared] = useState<boolean>(
+    vault?.attributes.is_shared || false
+  );
+
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -55,25 +77,53 @@ const VaultModal: React.FC<VaultModalProps> = ({
     }
 
     try {
-      const vaultData = await createVault(userToken, {
-        name,
-        unlock_code: unlockCode,
-        description,
-        vault_type: vaultType,
-        shared_with: sharedWith,
-        status,
-        is_shared: isShared,
-      });
+      if (vault) {
+        await updateVault(userToken, vault.id, {
+          name,
+          unlock_code: unlockCode,
+          description,
+          vault_type: vaultType,
+          shared_with: sharedWith,
+          status,
+          is_shared: isShared,
+        });
+      } else {
+        const vaultData = await createVault(userToken, {
+          name,
+          unlock_code: unlockCode,
+          description,
+          vault_type: vaultType,
+          shared_with: sharedWith,
+          status,
+          is_shared: isShared,
+        });
+        setVaults((prevVaults) => [...prevVaults, vaultData]);
+      }
+
       resetForm();
-      setVaults((prevVaults) => [...prevVaults, vaultData]);
-      onClose();
       setVaultsUpdated((prev) => !prev);
+      onClose();
     } catch (err: any) {
       setErrors(Array.isArray(err) ? err : [err]);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    if (visible) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [visible]);
 
   const resetForm = () => {
     setName("");
@@ -90,8 +140,13 @@ const VaultModal: React.FC<VaultModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h3 className="text-lg font-semibold mb-4">Create New Vault</h3>
+      <div
+        ref={modalRef}
+        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+      >
+        <h3 className="text-lg font-semibold mb-4">
+          {vault ? "Update Vault" : "Create New Vault"}
+        </h3>
         {loading && <Spinner />}
         {errors.length > 0 && (
           <div className="mb-4">
@@ -116,19 +171,21 @@ const VaultModal: React.FC<VaultModalProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded"
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="unlockCode">
-              Unlock Code
-            </label>
-            <input
-              type="text"
-              id="unlockCode"
-              value={unlockCode}
-              onChange={(e) => setUnlockCode(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded"
-            />
-          </div>
+          {!vault && (
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2" htmlFor="unlockCode">
+                Unlock Code
+              </label>
+              <input
+                type="text"
+                id="unlockCode"
+                value={unlockCode}
+                onChange={(e) => setUnlockCode(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded"
+              />
+            </div>
+          )}
           <div className="mb-4">
             <label
               className="block text-gray-700 mb-2"
@@ -218,7 +275,7 @@ const VaultModal: React.FC<VaultModalProps> = ({
               type="submit"
               className="bg-blue-600 text-white px-4 py-2 rounded"
             >
-              Create Vault
+              {vault ? "Update Vault" : "Create Vault"}
             </button>
           </div>
         </form>

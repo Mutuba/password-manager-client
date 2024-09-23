@@ -1,8 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import React, { useState, useContext, Dispatch, SetStateAction } from "react";
 import { Vault } from "../types/VaultTypes";
 import { deleteVault } from "../services/vaultService";
 import ConfirmationModal from "../shared/ConfirmationModal";
+import VaultModal from "./VaultModal";
 import { AuthContext } from "../context/AuthContext";
 import Spinner from "../shared/Spinner";
 
@@ -14,8 +15,8 @@ interface VaultCardProps {
 const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
   const authContext = useContext(AuthContext);
   const { userToken } = authContext;
-  const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isVaultModalOpen, setIsVaultModalOpen] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -30,7 +31,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
 
     try {
       await deleteVault(userToken, vault.id);
-      setIsModalOpen(false);
+      setIsDeleteModalOpen(false);
       setVaultsUpdated((prev) => !prev);
     } catch (error) {
       setErrors(Array.isArray(error) ? error : [error]);
@@ -78,23 +79,24 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
 
         {/* Update Vault Button */}
         <button
-          onClick={() => navigate(`/vault/${vault?.id}/edit`)}
+          onClick={() => setIsVaultModalOpen(true)} // Open the modal when clicked
           className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200 w-full"
         >
           Update Vault
         </button>
 
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsDeleteModalOpen(true)}
           className="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition-colors duration-200 w-full"
         >
           Delete Vault
         </button>
       </div>
 
-      {isModalOpen && (
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
         <ConfirmationModal
-          isOpen={isModalOpen}
+          isOpen={isDeleteModalOpen}
           title="Delete Vault"
           message={
             <>
@@ -103,8 +105,20 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
               undone.
             </>
           }
-          onCancel={() => setIsModalOpen(false)}
+          onCancel={() => setIsDeleteModalOpen(false)}
           onConfirm={handleDelete}
+        />
+      )}
+
+      {/* Vault Modal for creating/updating a vault */}
+      {isVaultModalOpen && (
+        <VaultModal
+          visible={isVaultModalOpen}
+          setModalVisible={setIsVaultModalOpen}
+          setVaultsUpdated={setVaultsUpdated}
+          setVaults={() => {}} // If needed, add logic to update vaults
+          vault={vault} // Pass the vault data for updating
+          onClose={() => setIsVaultModalOpen(false)} // Close the modal
         />
       )}
     </div>

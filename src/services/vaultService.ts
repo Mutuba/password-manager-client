@@ -33,6 +33,28 @@ export const createVault = async (
   }
 };
 
+export const updateVault = async (
+  userToken: string,
+  vaultId: number,
+  vaultData: CreateVaultData
+) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/vaults/${vaultId}`,
+      vaultData,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error);
+  }
+};
+
 export const vaultLogin = async (
   userToken: string,
   vaultId: number,
