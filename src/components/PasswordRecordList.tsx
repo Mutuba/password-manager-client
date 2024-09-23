@@ -174,6 +174,7 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
           userToken={userToken}
           setUpdatedRecords={setUpdatedRecords}
           vault={vault}
+          showAddRecordModal={showAddRecordModal}
         />
       )}
 

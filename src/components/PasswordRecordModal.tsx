@@ -1,4 +1,10 @@
-import React, { useState, Dispatch, SetStateAction } from "react";
+import React, {
+  useState,
+  Dispatch,
+  SetStateAction,
+  useRef,
+  useEffect,
+} from "react";
 import {
   CreatePasswordRecordData,
   PasswordRecord,
@@ -12,6 +18,7 @@ interface PasswordRecordModalProps {
   userToken: string | null;
   vault: Vault | null;
   setUpdatedRecords: Dispatch<SetStateAction<PasswordRecord[] | []>>;
+  showAddRecordModal: boolean;
 }
 
 const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
@@ -19,6 +26,7 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
   setUpdatedRecords,
   userToken,
   vault,
+  showAddRecordModal,
 }) => {
   const [formData, setFormData] = useState<CreatePasswordRecordData>({
     encryption_key: "",
@@ -40,6 +48,22 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
     password?: string;
     encryption_key?: string;
   }>({});
+
+  const modalRef = useRef<HTMLDivElement>(null);
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    if (showAddRecordModal) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [showAddRecordModal]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -102,7 +126,10 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg">
+      <div
+        ref={modalRef}
+        className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg"
+      >
         <h2 className="text-lg font-bold">Add New Record</h2>
         <div className="mt-2">
           <div className="mb-4">
