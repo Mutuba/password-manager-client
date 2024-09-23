@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Vault } from "../types/VaultTypes";
 import { PasswordRecord } from "../types/PasswordRecordTypes";
-
 import PasswordRecordList from "./PasswordRecordList";
 import { vaultLogin } from "../services/vaultService";
 import { AuthContext } from "../context/AuthContext";
@@ -66,37 +65,39 @@ const VaultDetails: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-lg max-w-lg w-full">
+      <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
         {vault && (
           <>
-            <h3 className="text-xl font-bold text-gray-900 mb-3">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
               {vault.attributes?.name}
             </h3>
             {vault.attributes?.description && (
-              <p className="text-sm text-gray-700 mb-4">
+              <p className="text-sm text-gray-700 mb-6 text-center">
                 {vault.attributes.description}
               </p>
             )}
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Type:</span>{" "}
-              {vault.attributes?.vault_type}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Status:</span>{" "}
-              {vault.attributes?.status}
-            </p>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-medium">Created At:</span>{" "}
-              {new Date(vault.attributes?.created_at).toLocaleString()}
-            </p>
-            <p className="text-sm text-gray-600 mb-4">
-              <span className="font-medium">Last Accessed At:</span>{" "}
-              {new Date(vault.attributes?.last_accessed_at).toLocaleString()}
-            </p>
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">Type:</span>{" "}
+                {vault.attributes?.vault_type}
+              </p>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">Status:</span>{" "}
+                {vault.attributes?.status}
+              </p>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">Created At:</span>{" "}
+                {new Date(vault.attributes?.created_at).toLocaleString()}
+              </p>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">Last Accessed At:</span>{" "}
+                {new Date(vault.attributes?.last_accessed_at).toLocaleString()}
+              </p>
+            </div>
           </>
         )}
 
-        <div className="mt-4">
+        <div className="mt-6">
           {!isVaultOpen && (
             <input
               type="password"
@@ -109,7 +110,7 @@ const VaultDetails: React.FC = () => {
           )}
           {loading && <Spinner />}
           <button
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors w-full"
+            className="bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition-colors w-full font-semibold"
             onClick={handleVaultAccess}
           >
             {isVaultOpen ? "Close Vault" : "Access Vault"}
@@ -126,19 +127,17 @@ const VaultDetails: React.FC = () => {
           </div>
         )}
 
-        {isVaultOpen && records?.length === 0 && (
-          <div className="text-center text-gray-500 mt-4">
-            No password records found in this vault.
-          </div>
-        )}
-
-        {isVaultOpen && records && records.length > 0 && (
-          <PasswordRecordList records={records} userToken={userToken} />
+        {isVaultOpen && records && (
+          <PasswordRecordList
+            records={records}
+            userToken={userToken}
+            vault={vault}
+          />
         )}
 
         {isVaultOpen && (
           <button
-            className="mt-6 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors w-full"
+            className="mt-6 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors w-full font-semibold"
             onClick={() => navigate("/")}
           >
             Back to Home

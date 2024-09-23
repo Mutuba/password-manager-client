@@ -1,6 +1,6 @@
 export interface CreatePasswordRecordData {
   encryption_key: string;
-  password_records: {
+  password_record: {
     name: string;
     username: string;
     password: string;

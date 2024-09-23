@@ -7,12 +7,12 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const createPasswordRecord = async (
   userToken: string,
   vaultId: number,
-  vaultData: CreatePasswordRecordData
+  passwordRecordData: CreatePasswordRecordData
 ) => {
   try {
     const response = await axios.post(
       `${API_BASE_URL}/vaults/${vaultId}/password_records`,
-      vaultData,
+      passwordRecordData,
       {
         headers: {
           Authorization: `Bearer ${userToken}`,

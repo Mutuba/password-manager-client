@@ -1,19 +1,28 @@
-import React, { useState } from "react";
-import { CreatePasswordRecordData } from "../types/PasswordRecordTypes";
+import React, { useState, Dispatch, SetStateAction } from "react";
+import {
+  CreatePasswordRecordData,
+  PasswordRecord,
+} from "../types/PasswordRecordTypes";
 import Spinner from "../shared/Spinner";
+import { createPasswordRecord } from "../services/passwordRecordService";
+import { Vault } from "../types/VaultTypes";
 
 interface PasswordRecordModalProps {
   onClose: () => void;
-  onSave: (data: CreatePasswordRecordData) => void;
+  userToken: string | null;
+  vault: Vault | null;
+  setUpdatedRecords: Dispatch<SetStateAction<PasswordRecord[] | []>>;
 }
 
 const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
   onClose,
-  onSave,
+  setUpdatedRecords,
+  userToken,
+  vault,
 }) => {
   const [formData, setFormData] = useState<CreatePasswordRecordData>({
     encryption_key: "",
-    password_records: {
+    password_record: {
       name: "",
       username: "",
       password: "",
@@ -25,23 +34,67 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
+  const [formErrors, setFormErrors] = useState<{
+    name?: string;
+    username?: string;
+    password?: string;
+    encryption_key?: string;
+  }>({});
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      password_records: { ...prev.password_records, [name]: value },
+      password_record: { ...prev.password_record, [name]: value },
     }));
+  };
+
+  const validateForm = () => {
+    const errorMessages: {
+      name?: string;
+      username?: string;
+      password?: string;
+      encryption_key?: string;
+    } = {};
+
+    if (!formData.password_record.name)
+      errorMessages.name = "Name is required.";
+    if (!formData.password_record.username)
+      errorMessages.username = "Username is required.";
+    if (!formData.password_record.password)
+      errorMessages.password = "Password is required.";
+    if (!formData.encryption_key)
+      errorMessages.encryption_key = "Encryption key is required.";
+
+    return errorMessages;
   };
 
   const handleSave = async () => {
     setLoading(true);
     setErrors([]);
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors(validationErrors);
+      setLoading(false);
+      return;
+    }
+
+    if (!userToken || !vault) return;
+
     try {
-      await onSave(formData);
+      const newRecord = await createPasswordRecord(
+        userToken,
+        vault.id,
+        formData
+      );
+
+      setUpdatedRecords((prevRecords) => [...prevRecords, newRecord]);
+      onClose();
     } catch (error) {
-      setErrors(["Failed to save the record."]);
+      setErrors(Array.isArray(error) ? error : [error]);
     } finally {
       setLoading(false);
     }
@@ -52,59 +105,88 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
       <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg">
         <h2 className="text-lg font-bold">Add New Password Record</h2>
         <div className="mt-2">
-          <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            className="border border-gray-300 p-2 w-full mb-2"
-            value={formData.password_records.name}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            className="border border-gray-300 p-2 w-full mb-2"
-            value={formData.password_records.username}
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            className="border border-gray-300 p-2 w-full mb-2"
-            value={formData.password_records.password}
-            onChange={handleChange}
-          />
+          <div className="mb-4">
+            <input
+              type="text"
+              name="name"
+              required
+              placeholder="Name"
+              className="border border-gray-300 p-2 w-full mb-1"
+              value={formData.password_record.name}
+              onChange={handleChange}
+            />
+            {formErrors.name && (
+              <p className="text-red-500">{formErrors.name}</p>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <input
+              type="text"
+              name="username"
+              required
+              placeholder="Username"
+              className="border border-gray-300 p-2 w-full mb-1"
+              value={formData.password_record.username}
+              onChange={handleChange}
+            />
+            {formErrors.username && (
+              <p className="text-red-500">{formErrors.username}</p>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <input
+              type="password"
+              name="password"
+              required
+              placeholder="Password"
+              className="border border-gray-300 p-2 w-full mb-1"
+              value={formData.password_record.password}
+              onChange={handleChange}
+            />
+            {formErrors.password && (
+              <p className="text-red-500">{formErrors.password}</p>
+            )}
+          </div>
+
           <input
             type="text"
             name="url"
             placeholder="URL"
             className="border border-gray-300 p-2 w-full mb-2"
-            value={formData.password_records.url}
+            value={formData.password_record.url}
             onChange={handleChange}
           />
           <textarea
             name="notes"
             placeholder="Notes"
             className="border border-gray-300 p-2 w-full mb-2"
-            value={formData.password_records.notes}
+            value={formData.password_record.notes}
             onChange={handleChange}
           />
 
-          <input
-            type="password"
-            name="encryption_key"
-            placeholder="Encryption Key"
-            className="border border-gray-300 p-2 w-full mb-2"
-            value={formData.encryption_key}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                encryption_key: e.target.value,
-              }))
-            }
-          />
+          <div className="mb-4">
+            <input
+              type="password"
+              required
+              name="encryption_key"
+              placeholder="Encryption Key"
+              className="border border-gray-300 p-2 w-full mb-1"
+              value={formData.encryption_key}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  encryption_key: e.target.value,
+                }))
+              }
+            />
+            {formErrors.encryption_key && (
+              <p className="text-red-500">{formErrors.encryption_key}</p>
+            )}
+          </div>
+
+          {loading && <Spinner />}
 
           {errors.length > 0 && (
             <ul className="text-red-500">
@@ -116,15 +198,15 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
         </div>
 
         <div className="mt-4 flex justify-between">
+          <button className="px-4 py-2 rounded-md border" onClick={onClose}>
+            Cancel
+          </button>
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-md"
             onClick={handleSave}
             disabled={loading}
           >
-            {loading ? <Spinner /> : "Save"}
-          </button>
-          <button className="px-4 py-2 rounded-md border" onClick={onClose}>
-            Cancel
+            Save
           </button>
         </div>
       </div>
