@@ -77,9 +77,8 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
           Access Vault
         </Link>
 
-        {/* Update Vault Button */}
         <button
-          onClick={() => setIsVaultModalOpen(true)} // Open the modal when clicked
+          onClick={() => setIsVaultModalOpen(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200 w-full"
         >
           Update Vault
@@ -93,7 +92,6 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         </button>
       </div>
 
-      {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <ConfirmationModal
           isOpen={isDeleteModalOpen}
@@ -110,15 +108,14 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         />
       )}
 
-      {/* Vault Modal for creating/updating a vault */}
       {isVaultModalOpen && (
         <VaultModal
           visible={isVaultModalOpen}
           setModalVisible={setIsVaultModalOpen}
           setVaultsUpdated={setVaultsUpdated}
-          setVaults={() => {}} // If needed, add logic to update vaults
-          vault={vault} // Pass the vault data for updating
-          onClose={() => setIsVaultModalOpen(false)} // Close the modal
+          setVaults={() => {}}
+          vault={vault}
+          onClose={() => setIsVaultModalOpen(false)}
         />
       )}
     </div>
