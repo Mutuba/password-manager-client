@@ -4,7 +4,7 @@ import { useVaultForm } from "../hooks/useVaultForm";
 import { useVaultSubmit } from "../hooks/useVaultSubmit";
 import { Vault } from "../types/VaultTypes";
 import Spinner from "../shared/Spinner";
-import { statusOptions, vaultTypeOptions } from "../hooks/useVaultForm"; // Adjust path as necessary
+import { statusOptions, vaultTypeOptions } from "../hooks/useVaultForm";
 
 interface VaultModalProps {
   visible: boolean;
