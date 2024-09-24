@@ -59,7 +59,7 @@ const VaultDetails: React.FC = () => {
       setUnlockCode("");
       const toastId = "login-success";
       toast.dismiss(toastId);
-      toast.success("Logged in successfully", {
+      toast.success("Logged into the vault successfully", {
         toastId,
       });
     } catch (err: any) {
