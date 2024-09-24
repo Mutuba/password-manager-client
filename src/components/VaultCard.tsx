@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import React, {
   useState,
   useContext,
@@ -7,6 +6,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Vault } from "../types/VaultTypes";
@@ -32,6 +32,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
   const [isActionsVisible, setIsActionsVisible] = useState(false);
 
   const ActionsVisibleRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const handleOutsideClick = (event: MouseEvent) => {
     if (
@@ -76,6 +77,9 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
     }
   };
 
+  const handleAccessVault = () => {
+    navigate(`/vault/${vault?.id}/details`);
+  };
   return (
     <div className="bg-white border border-gray-300 rounded-xl p-6 hover:shadow-lg transition-shadow duration-300 max-w-sm relative">
       <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -104,12 +108,12 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         <span className="font-medium">Status:</span> {vault?.attributes?.status}
       </p>
 
-      <Link
-        to={`/vault/${vault?.id}/details`}
+      <button
+        onClick={handleAccessVault}
         className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200 w-full text-center"
       >
         Access Vault
-      </Link>
+      </button>
 
       <button
         className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"

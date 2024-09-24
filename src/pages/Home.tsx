@@ -11,16 +11,14 @@ const Home: React.FC = () => {
   const { user, userToken } = authContext;
   const [vaults, setVaults] = useState<Vault[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [vaultsUpdated, setVaultsUpdated] = useState<boolean>(false);
 
   const fetchAllVaults = async () => {
     setLoading(true);
-    setError(null);
-
     if (!userToken) {
-      setError("User token is missing.");
+      setErrors(["User token is missing."]);
       setLoading(false);
       return;
     }
@@ -29,7 +27,7 @@ const Home: React.FC = () => {
       const vaultsData = await fetchVaults(userToken);
       setVaults(vaultsData);
     } catch (err: any) {
-      setError(err.message);
+      setErrors(Array.isArray(err) ? err : [err]);
     } finally {
       setLoading(false);
     }
@@ -72,24 +70,27 @@ const Home: React.FC = () => {
             </button>
           </div>
 
-          {loading && <Spinner />}
-          {error && <p className="text-red-500">{error}</p>}
-
-          {!loading && !error && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {vaults.length > 0 ? (
-                vaults.map((vault: Vault) => (
-                  <VaultCard
-                    key={vault.id || Math.random()}
-                    vault={vault}
-                    setVaultsUpdated={setVaultsUpdated}
-                  />
-                ))
-              ) : (
-                <p className="text-gray-600">You don't have any vaults yet.</p>
-              )}
-            </div>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {loading ? (
+              <Spinner />
+            ) : errors.length > 0 ? (
+              <div className="text-red-500">
+                {errors.map((error, index) => (
+                  <p key={index}>{error}</p>
+                ))}
+              </div>
+            ) : vaults.length > 0 ? (
+              vaults.map((vault: Vault) => (
+                <VaultCard
+                  key={vault.id || Math.random()}
+                  vault={vault}
+                  setVaultsUpdated={setVaultsUpdated}
+                />
+              ))
+            ) : (
+              <p className="text-gray-600">You don't have any vaults yet.</p>
+            )}
+          </div>
         </div>
       </main>
     </div>

@@ -132,7 +132,7 @@ const VaultDetails: React.FC = () => {
           {loading && <Spinner />}
           {!isVaultOpen && (
             <button
-              className="bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition-colors w-full font-semibold"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200 mx-auto block text-center"
               onClick={handleVaultAccess}
             >
               Access Vault

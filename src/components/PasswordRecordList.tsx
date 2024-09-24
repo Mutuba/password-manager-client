@@ -33,7 +33,7 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
     if (currentRecord?.id === record.id && showModal) {
       setShowModal(false);
       setCurrentRecord(null);
-      setErrors([""]);
+      setErrors([]);
     } else {
       setCurrentRecord(record);
       setShowModal(true);

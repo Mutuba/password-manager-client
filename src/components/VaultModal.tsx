@@ -18,7 +18,6 @@ interface VaultModalProps {
 const VaultModal: React.FC<VaultModalProps> = ({
   visible,
   onClose,
-  setModalVisible,
   setVaults,
   setVaultsUpdated,
   vault,
