@@ -2,9 +2,9 @@ export interface CreateVaultData {
   name: string;
   unlock_code: string;
   description: string;
-  vault_type: number;
+  vault_type: string;
   shared_with: string[];
-  status: number;
+  status: string;
   is_shared: boolean;
 }
 
@@ -22,7 +22,7 @@ export interface Vault {
     access_count: number;
     is_shared: boolean;
     failed_attempts: number;
-    unlock_code?: string;
+    unlock_code: string;
     created_at: string;
     updated_at: string;
   };

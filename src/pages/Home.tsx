@@ -80,7 +80,7 @@ const Home: React.FC = () => {
               {vaults.length > 0 ? (
                 vaults.map((vault: Vault) => (
                   <VaultCard
-                    key={vault.id}
+                    key={vault.id || Math.random()}
                     vault={vault}
                     setVaultsUpdated={setVaultsUpdated}
                   />

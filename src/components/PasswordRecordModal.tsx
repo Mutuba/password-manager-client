@@ -115,7 +115,7 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
         formData
       );
 
-      setUpdatedRecords((prevRecords) => [...prevRecords, newRecord]);
+      setUpdatedRecords((prevRecords) => [...prevRecords, newRecord.data]);
       onClose();
     } catch (error) {
       setErrors(Array.isArray(error) ? error : [error]);

@@ -40,7 +40,7 @@ export const updateVault = async (
   vaultData: CreateVaultData
 ) => {
   try {
-    const response = await axios.post(
+    const response = await axios.patch(
       `${API_BASE_URL}/vaults/${vaultId}`,
       vaultData,
       {

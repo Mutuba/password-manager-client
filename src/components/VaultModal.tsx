@@ -1,37 +1,19 @@
-import React, {
-  useState,
-  useContext,
-  Dispatch,
-  SetStateAction,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { createVault, updateVault } from "../services/vaultService";
+import { useVaultForm } from "../hooks/useVaultForm";
+import { useVaultSubmit } from "../hooks/useVaultSubmit";
 import { Vault } from "../types/VaultTypes";
 import Spinner from "../shared/Spinner";
+import { statusOptions, vaultTypeOptions } from "../hooks/useVaultForm"; // Adjust path as necessary
 
 interface VaultModalProps {
   visible: boolean;
-  setModalVisible: Dispatch<SetStateAction<boolean>>;
-  setVaultsUpdated: Dispatch<SetStateAction<boolean>>;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setVaultsUpdated: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: () => void;
-  setVaults: Dispatch<SetStateAction<Vault[]>>;
+  setVaults: React.Dispatch<React.SetStateAction<Vault[]>>;
   vault?: Vault;
 }
-const vaultTypeOptions = [
-  { value: 0, label: "Personal" },
-  { value: 1, label: "Business" },
-  { value: 2, label: "Shared" },
-  { value: 3, label: "Temporary" },
-];
-
-const statusOptions = [
-  { value: 0, label: "Active" },
-  { value: 1, label: "Archived" },
-  { value: 2, label: "Deleted" },
-  { value: 3, label: "Locked" },
-];
 
 const VaultModal: React.FC<VaultModalProps> = ({
   visible,
@@ -43,71 +25,49 @@ const VaultModal: React.FC<VaultModalProps> = ({
 }) => {
   const authContext = useContext(AuthContext);
   const { userToken } = authContext;
-  const [errors, setErrors] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [name, setName] = useState<string>(vault?.attributes.name || "");
-  const [unlockCode, setUnlockCode] = useState<string>(
-    vault?.attributes.unlock_code || ""
-  );
-  const [description, setDescription] = useState<string>(
-    vault?.attributes.description || ""
-  );
-  const [vaultType, setVaultType] = useState<number>(
-    vault?.attributes.vault_type ? Number(vault?.attributes.vault_type) : 0
-  );
-  const [sharedWith, setSharedWith] = useState<string[]>(
-    vault?.attributes.shared_with || []
-  );
-  const [status, setStatus] = useState<number>(
-    vault?.attributes.status ? Number(vault?.attributes.status) : 0
-  );
-  const [isShared, setIsShared] = useState<boolean>(
-    vault?.attributes.is_shared || false
-  );
+
+  const {
+    name,
+    unlockCode,
+    description,
+    vaultType,
+    sharedWith,
+    status,
+    isShared,
+    setName,
+    setUnlockCode,
+    setDescription,
+    setVaultType,
+    setSharedWith,
+    setStatus,
+    setIsShared,
+    resetForm,
+  } = useVaultForm(vault);
+
+  const { errors, loading, submitVaultData } = useVaultSubmit({
+    userToken,
+    vault,
+    setVaults,
+    onSuccess: () => {
+      resetForm();
+      setVaultsUpdated((prev) => !prev);
+      onClose();
+    },
+  });
 
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setErrors([]);
-    if (!userToken) {
-      setErrors(["User token is missing."]);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      if (vault) {
-        await updateVault(userToken, vault.id, {
-          name,
-          unlock_code: unlockCode,
-          description,
-          vault_type: vaultType,
-          shared_with: sharedWith,
-          status,
-          is_shared: isShared,
-        });
-      } else {
-        const vaultData = await createVault(userToken, {
-          name,
-          unlock_code: unlockCode,
-          description,
-          vault_type: vaultType,
-          shared_with: sharedWith,
-          status,
-          is_shared: isShared,
-        });
-        setVaults((prevVaults) => [...prevVaults, vaultData]);
-      }
-
-      resetForm();
-      setVaultsUpdated((prev) => !prev);
-      onClose();
-    } catch (err: any) {
-      setErrors(Array.isArray(err) ? err : [err]);
-    } finally {
-      setLoading(false);
-    }
+    await submitVaultData({
+      name,
+      unlock_code: unlockCode,
+      description,
+      vault_type: vaultType,
+      shared_with: sharedWith,
+      status,
+      is_shared: isShared,
+    });
   };
 
   const handleOutsideClick = (event: MouseEvent) => {
@@ -125,21 +85,10 @@ const VaultModal: React.FC<VaultModalProps> = ({
     };
   }, [visible]);
 
-  const resetForm = () => {
-    setName("");
-    setUnlockCode("");
-    setDescription("");
-    setVaultType(0);
-    setSharedWith([]);
-    setStatus(0);
-    setIsShared(false);
-    setModalVisible(false);
-  };
-
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
       <div
         ref={modalRef}
         className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
@@ -208,7 +157,7 @@ const VaultModal: React.FC<VaultModalProps> = ({
             <select
               id="vaultType"
               value={vaultType}
-              onChange={(e) => setVaultType(Number(e.target.value))}
+              onChange={(e) => setVaultType(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded"
             >
               {vaultTypeOptions.map((option) => (
@@ -225,7 +174,7 @@ const VaultModal: React.FC<VaultModalProps> = ({
             <select
               id="status"
               value={status}
-              onChange={(e) => setStatus(Number(e.target.value))}
+              onChange={(e) => setStatus(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded"
             >
               {statusOptions.map((option) => (

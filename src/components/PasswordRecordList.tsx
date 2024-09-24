@@ -127,16 +127,15 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
               key={record.id || Math.random()}
               className="border border-gray-200 rounded-md p-4"
             >
-              <p className="font-semibold">{record?.attributes?.name}</p>
               <p className="text-gray-600">
-                <strong>Username:</strong> {record?.attributes?.username}
+                <strong>Username:</strong> {record.attributes.username}
               </p>
               <p className="text-gray-600">
                 <strong>Password:</strong>{" "}
-                {decryptedRecords.includes(record?.id)
+                {decryptedRecords.includes(record.id)
                   ? record.attributes.password
                   : "••••••••"}
-                {!decryptedRecords.includes(record?.id) && (
+                {!decryptedRecords.includes(record.id) && (
                   <button
                     onClick={() => toggleModal(record)}
                     className="ml-2 text-blue-500 hover:underline"
@@ -145,22 +144,22 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
                   </button>
                 )}
               </p>
-              {record?.attributes?.url && (
+              {record.attributes.url && (
                 <p className="text-gray-600">
                   <strong>URL:</strong>{" "}
                   <a
-                    href={record?.attributes?.url}
+                    href={record.attributes.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 hover:underline"
                   >
-                    {record?.attributes?.url}
+                    {record.attributes.url}
                   </a>
                 </p>
               )}
-              {record?.attributes?.notes && (
+              {record.attributes.notes && (
                 <p className="text-gray-600">
-                  <strong>Notes:</strong> {record?.attributes?.notes}
+                  <strong>Notes:</strong> {record.attributes.notes}
                 </p>
               )}
             </li>
