@@ -87,13 +87,16 @@ const VaultModal: React.FC<VaultModalProps> = ({
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+    <div
+      data-testid="create-vault-modal"
+      className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50"
+    >
       <div
         ref={modalRef}
         className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
       >
         <h3 className="text-lg font-semibold mb-4">
-          {vault ? "Update Vault" : "Create New Vault"}
+          {vault ? "Update vault" : "Create vault"}
         </h3>
         {loading && <Spinner />}
         {errors.length > 0 && (

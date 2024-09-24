@@ -63,10 +63,11 @@ const Home: React.FC = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">Your Vaults</h2>
             <button
+              data-testid="create-vault-btn"
               onClick={() => setModalVisible(true)}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
-              Create New Vault
+              + New Vault
             </button>
           </div>
 

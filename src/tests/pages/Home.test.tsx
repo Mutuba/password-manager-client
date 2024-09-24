@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { vi } from "vitest";
 import Home from "../../pages/Home";
@@ -134,6 +134,54 @@ describe("Home Component", () => {
 
     await waitFor(() =>
       expect(screen.getByText("Daniel's Vault")).toBeInTheDocument()
+    );
+  });
+
+  it("should display the create vault modal when create button is clicked", async () => {
+    const userMock = {
+      first_name: "John",
+      last_name: "Doe",
+      username: "john_doe",
+      email: "johndoe@example.com",
+      password: "password",
+    };
+
+    render(
+      <AuthContext.Provider
+        value={{
+          login: vi.fn(),
+          authError: null,
+          user: userMock,
+          userToken: userToken,
+
+          loading: false,
+          register: vi.fn(),
+          logout: vi.fn(),
+        }}
+      >
+        <MemoryRouter>
+          <Home />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId("create-vault-btn")).toBeInTheDocument()
+    );
+
+    await waitFor(() =>
+      expect(screen.getByText("+ New Vault")).toBeInTheDocument()
+    );
+
+    const createButton = screen.getByText("+ New Vault");
+    fireEvent.click(createButton);
+
+    await waitFor(() =>
+      expect(screen.getByText("Create vault")).toBeInTheDocument()
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId("create-vault-modal")).toBeInTheDocument()
     );
   });
 });
