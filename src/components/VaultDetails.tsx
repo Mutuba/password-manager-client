@@ -67,7 +67,7 @@ const VaultDetails: React.FC = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
         {isVaultOpen && (
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-1">
             <h3 className="text-2xl font-bold text-gray-900">
               {vault?.attributes?.name}
             </h3>
@@ -86,7 +86,7 @@ const VaultDetails: React.FC = () => {
         {vault && (
           <>
             {vault.attributes?.description && (
-              <p className="text-sm text-gray-700 mb-6">
+              <p className="text-sm text-gray-700 mb-2">
                 {vault.attributes.description}
               </p>
             )}
