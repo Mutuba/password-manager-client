@@ -4,10 +4,6 @@ import { vi } from "vitest";
 import Home from "../../pages/Home";
 import { AuthContext } from "../../context/AuthContext";
 
-beforeAll(() => {
-  vi.spyOn(global.Date, "now").mockImplementation(() => 1637842997000);
-});
-
 afterAll(() => {
   vi.restoreAllMocks();
 });
@@ -20,9 +16,9 @@ const vaultDataMock = [
     attributes: {
       id: 3,
       name: "Daniel's Vault",
-      created_at: "2024-09-19T12:13:19.862Z",
-      updated_at: "2024-09-24T07:47:32.790Z",
-      last_accessed_at: "2024-09-23T13:37:18.541Z",
+      created_at: new Date(),
+      updated_at: new Date(),
+      last_accessed_at: new Date(),
       description: "A vault to store my password records.",
       vault_type: "business",
       shared_with: [],

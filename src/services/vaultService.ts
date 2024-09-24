@@ -36,7 +36,7 @@ export const createVault = async (
 
 export const updateVault = async (
   userToken: string,
-  vaultId: number,
+  vaultId: string,
   vaultData: CreateVaultData
 ) => {
   try {
@@ -58,7 +58,7 @@ export const updateVault = async (
 
 export const vaultLogin = async (
   userToken: string,
-  vaultId: number,
+  vaultId: string,
   vaultData: { unlock_code: string }
 ) => {
   try {
@@ -78,7 +78,7 @@ export const vaultLogin = async (
   }
 };
 
-export const deleteVault = async (userToken: string, vaultId: number) => {
+export const deleteVault = async (userToken: string, vaultId: string) => {
   try {
     return await axios.delete(`${API_BASE_URL}/vaults/${vaultId}/`, {
       headers: {

@@ -48,7 +48,7 @@ const VaultDetails: React.FC = () => {
       return;
     }
     try {
-      const responseData = await vaultLogin(userToken, parseInt(id), {
+      const responseData = await vaultLogin(userToken, id, {
         unlock_code: unlockCode,
       });
 

@@ -9,10 +9,10 @@ export interface CreateVaultData {
 }
 
 export interface Vault {
-  id: number;
-  type: "vault";
+  id: string;
+  type: string;
   attributes: {
-    id: number;
+    id: string;
     name: string;
     last_accessed_at: Date;
     description: string;
@@ -23,7 +23,7 @@ export interface Vault {
     is_shared: boolean;
     failed_attempts: number;
     unlock_code: string;
-    created_at: string;
-    updated_at: string;
+    created_at: Date;
+    updated_at: Date;
   };
 }
