@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { createVault, updateVault } from "../services/vaultService";
 import { Vault } from "../types/VaultTypes";
 
@@ -36,11 +38,19 @@ export const useVaultSubmit = ({
     try {
       if (vault) {
         await updateVault(userToken, vault.id, formData);
+        const toastId = "create-vault-success";
+        toast.dismiss(toastId);
+        toast.success("Vault successfully updated.", {
+          toastId,
+        });
       } else {
-        console.log("initialVault", formData);
-
         const vaultData = await createVault(userToken, formData);
         setVaults((prevVaults) => [...prevVaults, vaultData]);
+        const toastId = "create-vault-success";
+        toast.dismiss(toastId);
+        toast.success("New Vault successfully created.", {
+          toastId,
+        });
       }
 
       onSuccess();

@@ -7,6 +7,8 @@ import React, {
   useRef,
   useEffect,
 } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Vault } from "../types/VaultTypes";
 import { deleteVault } from "../services/vaultService";
 import ConfirmationModal from "../shared/ConfirmationModal";
@@ -62,6 +64,11 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
       await deleteVault(userToken, vault.id);
       setIsDeleteModalOpen(false);
       setVaultsUpdated((prev) => !prev);
+      const toastId = "delete-success";
+      toast.dismiss(toastId);
+      toast.success("Vault deleted successfully", {
+        toastId,
+      });
     } catch (error) {
       setErrors(Array.isArray(error) ? error : [error]);
     } finally {

@@ -5,6 +5,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+
 import Home from "./pages/Home";
 import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";
@@ -18,6 +20,17 @@ const App: React.FC = () => {
     <AuthProvider>
       <Router>
         <div className="min-h-screen flex flex-col bg-gray-100">
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <Navbar />
           <Routes>
             <Route path="/" element={<ProtectedRoute component={Home} />} />

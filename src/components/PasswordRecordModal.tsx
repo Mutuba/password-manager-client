@@ -5,6 +5,8 @@ import React, {
   useRef,
   useEffect,
 } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   CreatePasswordRecordData,
   PasswordRecord,
@@ -117,6 +119,11 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
 
       setUpdatedRecords((prevRecords) => [...prevRecords, newRecord.data]);
       onClose();
+      const toastId = "create_record-success";
+      toast.dismiss(toastId);
+      toast.success("New record successfully created.", {
+        toastId,
+      });
     } catch (error) {
       setErrors(Array.isArray(error) ? error : [error]);
     } finally {

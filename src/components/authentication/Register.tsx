@@ -1,4 +1,6 @@
 import React, { useState, FormEvent, ChangeEvent, useContext } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -21,6 +23,11 @@ const Register: React.FC = () => {
     const { success } = await register(formData);
     if (success) {
       navigate("/");
+      const toastId = "registration-success";
+      toast.dismiss(toastId);
+      toast.success("You have successfully registered.", {
+        toastId,
+      });
     }
   };
 

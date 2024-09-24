@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Vault } from "../types/VaultTypes";
 import { PasswordRecord } from "../types/PasswordRecordTypes";
 import PasswordRecordList from "./PasswordRecordList";
@@ -55,6 +57,11 @@ const VaultDetails: React.FC = () => {
       setIsVaultOpen(true);
       setErrors([]);
       setUnlockCode("");
+      const toastId = "login-success";
+      toast.dismiss(toastId);
+      toast.success("Logged in successfully", {
+        toastId,
+      });
     } catch (err: any) {
       setErrors(Array.isArray(err) ? err : [err]);
       setRecords(null);
