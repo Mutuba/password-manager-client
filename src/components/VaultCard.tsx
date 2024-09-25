@@ -149,7 +149,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
           title="Delete Vault"
           message={
             <>
-              Are you sure you want to delete the vault{" "}
+              Are you sure you want to delete the vault?
               <strong>{vault?.attributes?.name}</strong>? This action cannot be
               undone.
             </>

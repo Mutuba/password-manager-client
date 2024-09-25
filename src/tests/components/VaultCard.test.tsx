@@ -1,8 +1,15 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import * as router from "react-router";
 import { vi } from "vitest";
 import VaultCard from "../../components/VaultCard";
 import { AuthContext } from "../../context/AuthContext";
+
+const navigate = vi.fn();
+
+beforeEach(() => {
+  vi.spyOn(router, "useNavigate").mockImplementation(() => navigate);
+});
 
 afterAll(() => {
   vi.restoreAllMocks();
@@ -38,8 +45,9 @@ const vaultMock = {
     failed_attempts: 0,
   },
 };
+
 vi.mock("../../services/vaultService.ts", () => ({
-  fetchVaults: vi.fn(() => Promise.resolve(vaultMock)),
+  deleteVault: vi.fn(() => Promise.resolve()),
 }));
 
 describe("Home Component", () => {
@@ -162,6 +170,72 @@ describe("Home Component", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Delete Vault")).toBeInTheDocument();
+    });
+  });
+
+  it("should open delete confirmation modal when delete is clicked", async () => {
+    render(
+      <AuthContext.Provider
+        value={{
+          login: vi.fn(),
+          authError: null,
+          user: userMock,
+          userToken: null,
+          loading: false,
+          register: vi.fn(),
+          logout: vi.fn(),
+        }}
+      >
+        <MemoryRouter>
+          <VaultCard
+            vault={vaultMock}
+            setVaultsUpdated={setVaultsUpdatedMock}
+          />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
+
+    fireEvent.click(screen.getByTestId("ellipsis-action-menu"));
+
+    fireEvent.click(screen.getByText("Delete Vault"));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/Are you sure you want to delete the vault?/)
+      ).toBeInTheDocument()
+    );
+  });
+
+  it("should display a loading spinner while vault is being deleted", async () => {
+    render(
+      <AuthContext.Provider
+        value={{
+          login: vi.fn(),
+          authError: null,
+          user: userMock,
+          userToken: userToken,
+          loading: false,
+          register: vi.fn(),
+          logout: vi.fn(),
+        }}
+      >
+        <MemoryRouter>
+          <VaultCard
+            vault={vaultMock}
+            setVaultsUpdated={setVaultsUpdatedMock}
+          />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
+
+    fireEvent.click(screen.getByTestId("ellipsis-action-menu"));
+
+    fireEvent.click(screen.getByText("Delete Vault"));
+
+    fireEvent.click(screen.getByTestId("confirm-button"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("spinner")).toBeInTheDocument();
     });
   });
 });

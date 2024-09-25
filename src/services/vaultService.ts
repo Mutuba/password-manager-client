@@ -4,6 +4,28 @@ import { handleApiError } from "./errorHandler";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export const vaultLogin = async (
+  userToken: string,
+  vaultId: string,
+  vaultData: { unlock_code: string }
+) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/vaults/${vaultId}/login`,
+      vaultData,
+      {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    handleApiError(error);
+  }
+};
+
 export const fetchVaults = async (userToken: string) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/vaults`, {
@@ -42,28 +64,6 @@ export const updateVault = async (
   try {
     const response = await axios.patch(
       `${API_BASE_URL}/vaults/${vaultId}`,
-      vaultData,
-      {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    handleApiError(error);
-  }
-};
-
-export const vaultLogin = async (
-  userToken: string,
-  vaultId: string,
-  vaultData: { unlock_code: string }
-) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/vaults/${vaultId}/login`,
       vaultData,
       {
         headers: {
