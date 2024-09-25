@@ -46,10 +46,6 @@ const vaultMock = {
   },
 };
 
-vi.mock("../../services/vaultService.ts", () => ({
-  deleteVault: vi.fn(() => Promise.resolve()),
-}));
-
 describe("Home Component", () => {
   it("should display the user's first name if logged in", async () => {
     render(
@@ -229,13 +225,75 @@ describe("Home Component", () => {
     );
 
     fireEvent.click(screen.getByTestId("ellipsis-action-menu"));
-
     fireEvent.click(screen.getByText("Delete Vault"));
-
     fireEvent.click(screen.getByTestId("confirm-button"));
 
     await waitFor(() => {
       expect(screen.getByTestId("spinner")).toBeInTheDocument();
     });
+  });
+
+  it("should navigate to the vault details page on Access Vault click", async () => {
+    vi.mock("../../services/vaultService.ts", () => ({
+      deleteVault: vi.fn(() => Promise.resolve()),
+    }));
+    render(
+      <AuthContext.Provider
+        value={{
+          login: vi.fn(),
+          authError: null,
+          user: userMock,
+          userToken: userToken,
+          loading: false,
+          register: vi.fn(),
+          logout: vi.fn(),
+        }}
+      >
+        <MemoryRouter>
+          <VaultCard
+            vault={vaultMock}
+            setVaultsUpdated={setVaultsUpdatedMock}
+          />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
+
+    fireEvent.click(screen.getByText(/Access Vault/));
+    expect(navigate).toHaveBeenCalledWith(`/vault/3/details`);
+  });
+
+  it("should display error message when vault deletion fails", async () => {
+    vi.mock("../../services/vaultService.ts", () => ({
+      deleteVault: vi.fn(() => Promise.reject("User token is missing.")),
+    }));
+
+    render(
+      <AuthContext.Provider
+        value={{
+          login: vi.fn(),
+          authError: null,
+          user: userMock,
+          userToken: userToken,
+          loading: false,
+          register: vi.fn(),
+          logout: vi.fn(),
+        }}
+      >
+        <MemoryRouter>
+          <VaultCard
+            vault={vaultMock}
+            setVaultsUpdated={setVaultsUpdatedMock}
+          />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
+
+    fireEvent.click(screen.getByTestId("ellipsis-action-menu"));
+    fireEvent.click(screen.getByText(/Delete Vault/));
+    fireEvent.click(screen.getByText(/Confirm/));
+
+    await waitFor(() =>
+      expect(screen.getByText("User token is missing.")).toBeInTheDocument()
+    );
   });
 });
