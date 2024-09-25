@@ -192,7 +192,6 @@ describe("Home Component", () => {
     );
 
     fireEvent.click(screen.getByTestId("ellipsis-action-menu"));
-
     fireEvent.click(screen.getByText("Delete Vault"));
 
     await waitFor(() =>
@@ -296,4 +295,76 @@ describe("Home Component", () => {
       expect(screen.getByText("User token is missing.")).toBeInTheDocument()
     );
   });
+
+  it("should open vault update modal when update is clicked", async () => {
+    render(
+      <AuthContext.Provider
+        value={{
+          login: vi.fn(),
+          authError: null,
+          user: userMock,
+          userToken: null,
+          loading: false,
+          register: vi.fn(),
+          logout: vi.fn(),
+        }}
+      >
+        <MemoryRouter>
+          <VaultCard
+            vault={vaultMock}
+            setVaultsUpdated={setVaultsUpdatedMock}
+          />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
+
+    fireEvent.click(screen.getByTestId("ellipsis-action-menu"));
+    fireEvent.click(screen.getByText("Update Vault"));
+
+    await waitFor(() =>
+      expect(screen.getByText("Update vault")).toBeInTheDocument()
+    );
+
+    await waitFor(() =>
+      expect(screen.getByText("Daniel's Vault")).toBeInTheDocument()
+    );
+  });
+
+  //   it("should update vault when update button is clicked", async () => {
+  //     vi.mock("../../services/vaultService.ts", () => ({
+  //         updateVault: vi.fn(() => Promise.reject()),
+  //       }));
+  //     render(
+  //       <AuthContext.Provider
+  //         value={{
+  //           login: vi.fn(),
+  //           authError: null,
+  //           user: userMock,
+  //           userToken: null,
+  //           loading: false,
+  //           register: vi.fn(),
+  //           logout: vi.fn(),
+  //         }}
+  //       >
+  //         <MemoryRouter>
+  //           <VaultCard
+  //             vault={vaultMock}
+  //             setVaultsUpdated={setVaultsUpdatedMock}
+  //           />
+  //         </MemoryRouter>
+  //       </AuthContext.Provider>
+  //     );
+
+  //     fireEvent.click(screen.getByTestId("ellipsis-action-menu"));
+  //     fireEvent.click(screen.getByText("Update Vault"));
+
+  //     const vaultNameInput = screen.getByLabelText("Vault Name");
+
+  //     fireEvent.change(vaultNameInput, {
+  //       target: { value: "Updated vault name" },
+  //     });
+
+  //     fireEvent.click(screen.getByTestId("vault-submit-button"));
+
+  //   });
 });
