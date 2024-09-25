@@ -258,7 +258,7 @@ describe("Home Component", () => {
       </AuthContext.Provider>
     );
 
-    fireEvent.click(screen.getByText(/Access Vault/));
+    fireEvent.click(screen.getByTestId("access-vault-button"));
     expect(navigate).toHaveBeenCalledWith(`/vault/3/details`);
   });
 
@@ -289,8 +289,8 @@ describe("Home Component", () => {
     );
 
     fireEvent.click(screen.getByTestId("ellipsis-action-menu"));
-    fireEvent.click(screen.getByText(/Delete Vault/));
-    fireEvent.click(screen.getByText(/Confirm/));
+    fireEvent.click(screen.getByText("Delete Vault"));
+    fireEvent.click(screen.getByText("Confirm"));
 
     await waitFor(() =>
       expect(screen.getByText("User token is missing.")).toBeInTheDocument()
