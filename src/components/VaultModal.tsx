@@ -24,7 +24,6 @@ const VaultModal: React.FC<VaultModalProps> = ({
 }) => {
   const authContext = useContext(AuthContext);
   const { userToken } = authContext;
-
   const {
     name,
     unlockCode,

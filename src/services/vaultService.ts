@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateVaultData } from "../types/VaultTypes";
+import { vaultData } from "../types/VaultTypes";
 import { handleApiError } from "./errorHandler";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -39,10 +39,7 @@ export const fetchVaults = async (userToken: string) => {
   }
 };
 
-export const createVault = async (
-  userToken: string,
-  vaultData: CreateVaultData
-) => {
+export const createVault = async (userToken: string, vaultData: vaultData) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/vaults`, vaultData, {
       headers: {
@@ -59,7 +56,7 @@ export const createVault = async (
 export const updateVault = async (
   userToken: string,
   vaultId: string,
-  vaultData: CreateVaultData
+  vaultData: vaultData
 ) => {
   try {
     const response = await axios.patch(

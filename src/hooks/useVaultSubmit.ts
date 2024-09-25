@@ -31,13 +31,21 @@ export const useVaultSubmit = ({
   }) => {
     if (!userToken) {
       setErrors(["User token is missing."]);
+      setLoading(false);
       return;
     }
 
     setLoading(true);
     try {
       if (vault) {
-        await updateVault(userToken, vault.id, formData);
+        console.log("VaultModal", vault);
+        const response = await updateVault(userToken, vault.id, formData);
+        const vaultData = response.data;
+        setVaults((prevVaults) =>
+          prevVaults.map((vault) =>
+            vault.id === vaultData.id ? vaultData : vault
+          )
+        );
         const toastId = "create-vault-success";
         toast.dismiss(toastId);
         toast.success("Vault successfully updated.", {

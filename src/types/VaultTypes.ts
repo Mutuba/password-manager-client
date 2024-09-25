@@ -1,4 +1,4 @@
-export interface CreateVaultData {
+export interface vaultData {
   name: string;
   unlock_code: string;
   description: string;
