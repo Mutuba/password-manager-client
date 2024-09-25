@@ -6,7 +6,6 @@ import VaultModal from "../../components/VaultModal";
 import { AuthContext } from "../../context/AuthContext";
 
 const navigate = vi.fn();
-
 beforeEach(() => {
   vi.clearAllMocks();
   vi.spyOn(router, "useNavigate").mockImplementation(() => navigate);
@@ -18,7 +17,6 @@ afterAll(() => {
 });
 
 const userToken = "random-token";
-
 const userMock = {
   first_name: "John",
   last_name: "Doe",
@@ -95,7 +93,6 @@ describe("Home Component", () => {
     );
 
     expect(screen.getByText("Create vault")).toBeInTheDocument();
-
     expect(screen.getByLabelText(/Vault Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Unlock Code/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Description/i)).toBeInTheDocument();
@@ -107,6 +104,7 @@ describe("Home Component", () => {
   it("should display the spinner when submit button is clicked after filling fields", async () => {
     vi.mock("../../services/vaultService.ts", () => ({
       createVault: vi.fn(() => Promise.resolve(vaultMock)),
+      updateVault: vi.fn(() => Promise.resolve(updatedVaultMock)),
     }));
     render(
       <AuthContext.Provider
@@ -240,48 +238,49 @@ describe("Home Component", () => {
     );
   });
 
-  //   it("should display the spinner when submit button is clicked after updating fields", async () => {
-  //     vi.mock("../../services/vaultService.ts", () => ({
-  //       updateVault: vi.fn(() => Promise.resolve(updatedVaultMock)),
-  //     }));
-  //     render(
-  //       <AuthContext.Provider
-  //         value={{
-  //           login: vi.fn(),
-  //           authError: null,
-  //           user: userMock,
-  //           userToken: userToken,
-  //           loading: false,
-  //           register: vi.fn(),
-  //           logout: vi.fn(),
-  //         }}
-  //       >
-  //         <MemoryRouter>
-  //           <VaultModal
-  //             vault={vaultMock}
-  //             setModalVisible={vi.fn()}
-  //             onClose={vi.fn()}
-  //             setVaults={vi.fn()}
-  //             visible={true}
-  //             setVaultsUpdated={setVaultsUpdatedMock}
-  //           />
-  //         </MemoryRouter>
-  //       </AuthContext.Provider>
-  //     );
+  it("should display the spinner when submit button is clicked after updating fields", async () => {
+    vi.mock("../../services/vaultService.ts", () => ({
+      createVault: vi.fn(() => Promise.resolve(vaultMock)),
+      updateVault: vi.fn(() => Promise.resolve(updatedVaultMock)),
+    }));
+    render(
+      <AuthContext.Provider
+        value={{
+          login: vi.fn(),
+          authError: null,
+          user: userMock,
+          userToken: userToken,
+          loading: false,
+          register: vi.fn(),
+          logout: vi.fn(),
+        }}
+      >
+        <MemoryRouter>
+          <VaultModal
+            vault={vaultMock}
+            setModalVisible={vi.fn()}
+            onClose={vi.fn()}
+            setVaults={vi.fn()}
+            visible={true}
+            setVaultsUpdated={setVaultsUpdatedMock}
+          />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
 
-  //     await waitFor(() =>
-  //       expect(screen.getByDisplayValue("Daniel's Vault")).toBeInTheDocument()
-  //     );
+    await waitFor(() =>
+      expect(screen.getByDisplayValue("Daniel's Vault")).toBeInTheDocument()
+    );
 
-  //     const vaultNameInput = screen.getByLabelText("Vault Name");
-  //     fireEvent.change(vaultNameInput, {
-  //       target: { value: "Updated vault name" },
-  //     });
+    const vaultNameInput = screen.getByLabelText("Vault Name");
+    fireEvent.change(vaultNameInput, {
+      target: { value: "Updated vault name" },
+    });
 
-  //     fireEvent.click(screen.getByTestId("vault-submit-button"));
+    fireEvent.click(screen.getByTestId("vault-submit-button"));
 
-  //     await waitFor(() =>
-  //       expect(screen.getByTestId("spinner")).toBeInTheDocument()
-  //     );
-  //   });
+    await waitFor(() =>
+      expect(screen.getByTestId("spinner")).toBeInTheDocument()
+    );
+  });
 });
