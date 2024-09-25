@@ -35,20 +35,20 @@ const vaultDataMock = [
   },
 ];
 
+const userMock = {
+  first_name: "John",
+  last_name: "Doe",
+  username: "john_doe",
+  email: "johndoe@example.com",
+  password: "password",
+};
+
 vi.mock("../../services/vaultService.ts", () => ({
   fetchVaults: vi.fn(() => Promise.resolve(vaultDataMock)),
 }));
 
 describe("Home Component", () => {
   it("should display the user's first name if logged in", async () => {
-    const userMock = {
-      first_name: "John",
-      last_name: "Doe",
-      username: "john_doe",
-      email: "johndoe@example.com",
-      password: "password",
-    };
-
     render(
       <AuthContext.Provider
         value={{
@@ -72,7 +72,7 @@ describe("Home Component", () => {
   });
 
   it("should display the user's username if first name is not available", async () => {
-    const userMock = {
+    const localUserMock = {
       last_name: "Doe",
       username: "john_doe",
       email: "johndoe@example.com",
@@ -83,7 +83,7 @@ describe("Home Component", () => {
         value={{
           login: vi.fn(),
           authError: null,
-          user: userMock,
+          user: localUserMock,
           userToken: null,
           loading: false,
           register: vi.fn(),
@@ -101,14 +101,6 @@ describe("Home Component", () => {
   });
 
   it("should display vaults after fetching", async () => {
-    const userMock = {
-      first_name: "John",
-      last_name: "Doe",
-      username: "john_doe",
-      email: "johndoe@example.com",
-      password: "password",
-    };
-
     render(
       <AuthContext.Provider
         value={{
@@ -134,14 +126,6 @@ describe("Home Component", () => {
   });
 
   it("should display the create vault modal when create button is clicked", async () => {
-    const userMock = {
-      first_name: "John",
-      last_name: "Doe",
-      username: "john_doe",
-      email: "johndoe@example.com",
-      password: "password",
-    };
-
     render(
       <AuthContext.Provider
         value={{
