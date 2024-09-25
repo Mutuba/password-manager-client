@@ -116,6 +116,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
       </button>
 
       <button
+        data-testid="ellipsis-action-menu"
         className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
         onClick={() => setIsActionsVisible(!isActionsVisible)}
       >

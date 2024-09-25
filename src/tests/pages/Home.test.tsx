@@ -67,7 +67,7 @@ describe("Home Component", () => {
       </AuthContext.Provider>
     );
 
-    await waitFor(() => expect(screen.getByText(/John/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText("John")).toBeInTheDocument());
     await waitFor(() => expect(screen.getByText(/Hello/i)).toBeInTheDocument());
   });
 
@@ -96,7 +96,7 @@ describe("Home Component", () => {
 
     await waitFor(() => expect(screen.getByText(/Hello/i)).toBeInTheDocument());
     await waitFor(() =>
-      expect(screen.getByText(/john_doe/i)).toBeInTheDocument()
+      expect(screen.getByText("john_doe")).toBeInTheDocument()
     );
   });
 
