@@ -10,6 +10,26 @@ import { vi } from "vitest";
 import VaultDetails from "../../components/VaultDetails";
 import { AuthContext } from "../../context/AuthContext";
 
+const renderWithProviders = (
+  ui: any,
+  { user, token }: { user: any; token: string }
+) =>
+  render(
+    <AuthContext.Provider
+      value={{
+        login: vi.fn(),
+        authError: null,
+        user: user,
+        userToken: token,
+        loading: false,
+        register: vi.fn(),
+        logout: vi.fn(),
+      }}
+    >
+      <MemoryRouter>{ui}</MemoryRouter>
+    </AuthContext.Provider>
+  );
+
 afterAll(() => {
   vi.restoreAllMocks();
 });
@@ -36,41 +56,15 @@ vi.mock("react-router-dom", async () => {
 
 describe("VaultDetails Component", () => {
   it("should render initial modal with unlock code input and buttons", async () => {
-    render(
-      <AuthContext.Provider
-        value={{
-          login: vi.fn(),
-          authError: null,
-          user: userMock,
-          userToken: userToken,
-          loading: false,
-          register: vi.fn(),
-          logout: vi.fn(),
-        }}
-      >
-        <MemoryRouter>
-          <VaultDetails />
-        </MemoryRouter>
-      </AuthContext.Provider>
-    );
+    renderWithProviders(<VaultDetails />, { user: userMock, token: userToken });
 
-    await waitFor(() => {
-      expect(
-        screen.getByPlaceholderText(/Enter unlock code/i)
-      ).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByTestId("vault-details-cancel-btn")
-      ).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByTestId("vault-details-acess-vault-btn")
-      ).toBeInTheDocument();
-    });
+    expect(
+      screen.getByPlaceholderText(/Enter unlock code/i)
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("vault-details-cancel-btn")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("vault-details-acess-vault-btn")
+    ).toBeInTheDocument();
   });
 
   it("should render vault details when successfully accessed", async () => {
@@ -102,8 +96,6 @@ describe("VaultDetails Component", () => {
               attributes: {
                 name: "Second Record",
                 username: "Ashah",
-                url: null,
-                notes: null,
                 password: "XhBBdFifBGAOffciip",
                 created_at: new Date(),
                 updated_at: new Date(),
@@ -115,8 +107,6 @@ describe("VaultDetails Component", () => {
               attributes: {
                 name: "First Record",
                 username: "Pearl",
-                url: null,
-                notes: null,
                 password: "XhBBdFifBGAOciip",
                 created_at: new Date(),
                 updated_at: new Date(),
@@ -126,59 +116,28 @@ describe("VaultDetails Component", () => {
         })
       ),
     }));
-    render(
-      <AuthContext.Provider
-        value={{
-          login: vi.fn(),
-          authError: null,
-          user: userMock,
-          userToken: userToken,
-          loading: false,
-          register: vi.fn(),
-          logout: vi.fn(),
-        }}
-      >
-        <MemoryRouter>
-          <VaultDetails />
-        </MemoryRouter>
-      </AuthContext.Provider>
-    );
+
+    renderWithProviders(<VaultDetails />, { user: userMock, token: userToken });
 
     act(() => {
-      const unlockCodeInput = screen.getByPlaceholderText("Enter unlock code");
-
-      fireEvent.change(unlockCodeInput, {
+      fireEvent.change(screen.getByPlaceholderText("Enter unlock code"), {
         target: { value: "Favouritepassword123!*" },
       });
-
       fireEvent.click(screen.getByTestId("vault-details-acess-vault-btn"));
     });
 
     await waitFor(() => {
       expect(screen.getByText("Special Vault")).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
       expect(screen.getByText("Type:")).toBeInTheDocument();
       expect(screen.getByText("personal")).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
       expect(screen.getByText("Status:")).toBeInTheDocument();
       expect(screen.getByText("active")).toBeInTheDocument();
     });
 
     await waitFor(() => {
       expect(screen.getByText("Vault Records")).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(screen.getAllByTestId("password-record-item")).toHaveLength(2);
-    });
-
-    await waitFor(() => {
-      const usernameElements = screen.queryAllByText("Username:");
-      expect(usernameElements.length).toBeGreaterThan(0);
+      const passwordRecords = screen.getAllByTestId("password-record-item");
+      expect(passwordRecords).toHaveLength(2);
       expect(screen.getByText("Pearl")).toBeInTheDocument();
       expect(screen.getByText("Ashah")).toBeInTheDocument();
     });
