@@ -236,6 +236,7 @@ describe("Home Component", () => {
     vi.mock("../../services/vaultService.ts", () => ({
       deleteVault: vi.fn(() => Promise.resolve()),
     }));
+
     render(
       <AuthContext.Provider
         value={{

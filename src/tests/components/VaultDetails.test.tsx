@@ -25,14 +25,12 @@ const userMock = {
 
 vi.mock("react-router-dom", async () => {
   const mod = await vi.importActual("react-router-dom");
-  const navigate = vi.fn();
-
   return {
     ...mod,
     useParams: () => ({
       id: "3",
     }),
-    useNavigate: navigate,
+    useNavigate: vi.fn(),
   };
 });
 
