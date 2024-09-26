@@ -17,7 +17,7 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
   userToken,
   vault,
 }) => {
-  const [decryptedRecords, setDecryptedRecords] = useState<number[]>([]);
+  const [decryptedRecords, setDecryptedRecords] = useState<string[]>([]);
   const [decryptionKey, setDecryptionKey] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] = useState<PasswordRecord | null>(
@@ -39,6 +39,10 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
       setShowModal(true);
     }
   };
+
+  const handleUpdate = () => {};
+
+  const handleDelete = () => {};
 
   const handleDecryptPassword = async () => {
     setLoading(true);
@@ -125,6 +129,8 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
               record={record}
               decrypted={decryptedRecords.includes(record.id)}
               onDecrypt={() => toggleModal(record)}
+              onUpdate={handleUpdate}
+              onDelete={handleDelete}
             />
           ))}
         </ul>

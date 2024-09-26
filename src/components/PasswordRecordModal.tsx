@@ -8,7 +8,7 @@ import React, {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-  CreatePasswordRecordData,
+  PasswordRecordData,
   PasswordRecord,
 } from "../types/PasswordRecordTypes";
 import Spinner from "../shared/Spinner";
@@ -30,7 +30,7 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
   vault,
   showAddRecordModal,
 }) => {
-  const [formData, setFormData] = useState<CreatePasswordRecordData>({
+  const [formData, setFormData] = useState<PasswordRecordData>({
     encryption_key: "",
     password_record: {
       name: "",

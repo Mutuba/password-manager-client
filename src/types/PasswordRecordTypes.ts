@@ -1,4 +1,4 @@
-export interface CreatePasswordRecordData {
+export interface PasswordRecordData {
   encryption_key: string;
   password_record: {
     name: string;
@@ -20,7 +20,7 @@ export interface PasswordRecordAttributes {
 }
 
 export interface PasswordRecord {
-  id: number;
+  id: string;
   type: "password_record";
   attributes: PasswordRecordAttributes;
 }

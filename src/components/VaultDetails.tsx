@@ -48,7 +48,6 @@ const VaultDetails: React.FC = () => {
       setVault(responseData.data);
       setRecords(responseData.included);
       setIsVaultOpen(true);
-      setErrors([]);
       setUnlockCode("");
       const toastId = "login-success";
       toast.dismiss(toastId);
