@@ -19,16 +19,9 @@ const VaultDetails: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isVaultOpen, setIsVaultOpen] = useState<boolean>(false);
   const [vault, setVault] = useState<Vault | null>(null);
-
   const navigate = useNavigate();
 
   const handleVaultAccess = async () => {
-    if (isVaultOpen) {
-      setRecords(null);
-      setIsVaultOpen(false);
-      return;
-    }
-
     setLoading(true);
     setErrors([]);
     if (!userToken) {
@@ -70,6 +63,12 @@ const VaultDetails: React.FC = () => {
     }
   };
 
+  const handleVaultClose = () => {
+    setVault(null);
+    setRecords(null);
+    setIsVaultOpen(false);
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
@@ -79,11 +78,9 @@ const VaultDetails: React.FC = () => {
               {vault?.attributes?.name}
             </h3>
             <button
+              data-testid="vault-close-button"
               className="bg-red-600 text-white px-3 py-1 rounded-full shadow-lg hover:bg-red-700 transition"
-              onClick={() => {
-                setIsVaultOpen(false);
-                setRecords(null);
-              }}
+              onClick={handleVaultClose}
             >
               <span className="text-xl">✕</span> Close
             </button>
@@ -134,6 +131,7 @@ const VaultDetails: React.FC = () => {
             {!isVaultOpen && (
               <>
                 <button
+                  data-testid="vault-details-cancel-btn"
                   className="bg-gray-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-500 transition-colors duration-200"
                   onClick={() => navigate("/")}
                 >
@@ -141,6 +139,7 @@ const VaultDetails: React.FC = () => {
                 </button>
 
                 <button
+                  data-testid="vault-details-acess-vault-btn"
                   className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200"
                   onClick={handleVaultAccess}
                 >

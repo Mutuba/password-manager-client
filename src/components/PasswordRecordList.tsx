@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { PasswordRecord } from "../types//PasswordRecordTypes";
+import { PasswordRecord } from "../types/PasswordRecordTypes";
 import { decryptPassword } from "../services/passwordRecordService";
 import Spinner from "../shared/Spinner";
 import { Vault } from "src/types/VaultTypes";
 import PasswordRecordModal from "./PasswordRecordModal";
+import PasswordRecordItem from "./PasswordRecordItem";
 
 interface PasswordRecordListProps {
   records: PasswordRecord[];
@@ -26,7 +27,6 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [updatedRecords, setUpdatedRecords] =
     useState<PasswordRecord[]>(records);
-
   const [showAddRecordModal, setShowAddRecordModal] = useState<boolean>(false);
 
   const toggleModal = (record: PasswordRecord) => {
@@ -42,22 +42,19 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
 
   const handleDecryptPassword = async () => {
     setLoading(true);
-    if (!currentRecord) {
+    if (!currentRecord || !userToken) {
+      setErrors(["Missing record or user token."]);
       setLoading(false);
       return;
     }
-    if (!userToken) {
-      setErrors(["User token is missing."]);
-      setLoading(false);
-      return;
-    }
+
     try {
       const response = await decryptPassword(userToken, currentRecord.id, {
         encryption_key: decryptionKey,
       });
-
       const decryptedPassword = response.password;
       setDecryptedRecords((prev) => [...prev, currentRecord.id]);
+
       const updatedRecord = {
         ...currentRecord,
         attributes: {
@@ -123,46 +120,12 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
       ) : (
         <ul className="mt-4 space-y-2">
           {updatedRecords.map((record) => (
-            <li
-              key={record.id || Math.random()}
-              className="border border-gray-200 rounded-md p-4"
-            >
-              <p className="text-gray-600">
-                <strong>Username:</strong> {record.attributes.username}
-              </p>
-              <p className="text-gray-600">
-                <strong>Password:</strong>{" "}
-                {decryptedRecords.includes(record.id)
-                  ? record.attributes.password
-                  : "••••••••"}
-                {!decryptedRecords.includes(record.id) && (
-                  <button
-                    onClick={() => toggleModal(record)}
-                    className="ml-2 text-blue-500 hover:underline"
-                  >
-                    👁️ View
-                  </button>
-                )}
-              </p>
-              {record.attributes.url && (
-                <p className="text-gray-600">
-                  <strong>URL:</strong>{" "}
-                  <a
-                    href={record.attributes.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    {record.attributes.url}
-                  </a>
-                </p>
-              )}
-              {record.attributes.notes && (
-                <p className="text-gray-600">
-                  <strong>Notes:</strong> {record.attributes.notes}
-                </p>
-              )}
-            </li>
+            <PasswordRecordItem
+              key={record.id}
+              record={record}
+              decrypted={decryptedRecords.includes(record.id)}
+              onDecrypt={() => toggleModal(record)}
+            />
           ))}
         </ul>
       )}
@@ -188,7 +151,6 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
               onChange={(e) => setDecryptionKey(e.target.value)}
             />
             {loading && <Spinner />}
-
             {errors.length > 0 && (
               <div className="mb-4">
                 <ul className="text-red-500">

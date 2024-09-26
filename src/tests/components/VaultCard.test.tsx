@@ -257,7 +257,7 @@ describe("Home Component", () => {
       </AuthContext.Provider>
     );
 
-    fireEvent.click(screen.getByTestId("access-vault-button"));
+    fireEvent.click(screen.getByTestId("vault-card-access-vault-btn"));
     expect(navigate).toHaveBeenCalledWith(`/vault/3/details`);
   });
 
