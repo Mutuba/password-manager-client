@@ -38,7 +38,6 @@ export const useVaultSubmit = ({
     setLoading(true);
     try {
       if (vault) {
-        console.log("VaultModal", vault);
         const response = await updateVault(userToken, vault.id, formData);
         const vaultData = response.data;
         setVaults((prevVaults) =>
