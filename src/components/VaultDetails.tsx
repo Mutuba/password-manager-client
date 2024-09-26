@@ -72,6 +72,15 @@ const VaultDetails: React.FC = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
+        {errors.length > 0 && (
+          <div className="mt-4">
+            <ul className="text-red-600">
+              {errors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         {isVaultOpen && (
           <div className="flex justify-between items-center mb-1">
             <h3 className="text-2xl font-bold text-gray-900">
@@ -149,16 +158,6 @@ const VaultDetails: React.FC = () => {
             )}
           </div>
         </div>
-
-        {errors.length > 0 && (
-          <div className="mt-4">
-            <ul className="text-red-600">
-              {errors.map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-          </div>
-        )}
 
         {isVaultOpen && records && (
           <PasswordRecordList
