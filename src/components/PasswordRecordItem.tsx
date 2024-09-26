@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { PasswordRecord } from "../types/PasswordRecordTypes";
 import { FaEllipsisV, FaEdit, FaTrashAlt } from "react-icons/fa";
 
@@ -18,7 +18,25 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
   onDelete,
 }) => {
   const [isActionsVisible, setIsActionsVisible] = useState(false);
-  const actionsVisibleRef = useRef<HTMLDivElement>(null);
+  const ActionsVisibleRef = useRef<HTMLDivElement>(null);
+
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (
+      ActionsVisibleRef.current &&
+      !ActionsVisibleRef.current.contains(event.target as Node)
+    ) {
+      setIsActionsVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isActionsVisible) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isActionsVisible]);
 
   const handleToggleActions = () => {
     setIsActionsVisible((prev) => !prev);
@@ -71,7 +89,7 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
       </button>
       {isActionsVisible && (
         <div
-          ref={actionsVisibleRef}
+          ref={ActionsVisibleRef}
           className="absolute right-3 top-10 bg-white border border-gray-300 rounded-lg shadow-lg z-10"
         >
           <button
