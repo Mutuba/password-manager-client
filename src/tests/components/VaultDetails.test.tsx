@@ -54,6 +54,55 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
+vi.mock("../../services/vaultService.ts", () => ({
+  vaultLogin: vi.fn(() =>
+    Promise.resolve({
+      data: {
+        id: "1",
+        type: "vault",
+        attributes: {
+          id: 1,
+          name: "Special Vault",
+          created_at: new Date(),
+          updated_at: new Date(),
+          last_accessed_at: new Date(),
+          description: "A special vault",
+          vault_type: "personal",
+          status: "active",
+          shared_with: [],
+          access_count: 0,
+          is_shared: false,
+          failed_attempts: 0,
+        },
+      },
+      included: [
+        {
+          id: "2",
+          type: "password_record",
+          attributes: {
+            name: "Second Record",
+            username: "Ashah",
+            password: "XhBBdFifBGAOffciip",
+            created_at: new Date(),
+            updated_at: new Date(),
+          },
+        },
+        {
+          id: "1",
+          type: "password_record",
+          attributes: {
+            name: "First Record",
+            username: "Pearl",
+            password: "XhBBdFifBGAOciip",
+            created_at: new Date(),
+            updated_at: new Date(),
+          },
+        },
+      ],
+    })
+  ),
+}));
+
 describe("VaultDetails Component", () => {
   it("should render initial modal with unlock code input and buttons", async () => {
     renderWithProviders(<VaultDetails />, { user: userMock, token: userToken });
@@ -68,55 +117,6 @@ describe("VaultDetails Component", () => {
   });
 
   it("should render vault details when successfully accessed", async () => {
-    vi.mock("../../services/vaultService.ts", () => ({
-      vaultLogin: vi.fn(() =>
-        Promise.resolve({
-          data: {
-            id: "1",
-            type: "vault",
-            attributes: {
-              id: 1,
-              name: "Special Vault",
-              created_at: new Date(),
-              updated_at: new Date(),
-              last_accessed_at: new Date(),
-              description: "A special vault",
-              vault_type: "personal",
-              shared_with: [],
-              status: "active",
-              access_count: 0,
-              is_shared: false,
-              failed_attempts: 0,
-            },
-          },
-          included: [
-            {
-              id: "2",
-              type: "password_record",
-              attributes: {
-                name: "Second Record",
-                username: "Ashah",
-                password: "XhBBdFifBGAOffciip",
-                created_at: new Date(),
-                updated_at: new Date(),
-              },
-            },
-            {
-              id: "1",
-              type: "password_record",
-              attributes: {
-                name: "First Record",
-                username: "Pearl",
-                password: "XhBBdFifBGAOciip",
-                created_at: new Date(),
-                updated_at: new Date(),
-              },
-            },
-          ],
-        })
-      ),
-    }));
-
     renderWithProviders(<VaultDetails />, { user: userMock, token: userToken });
 
     act(() => {
