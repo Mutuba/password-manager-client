@@ -1,6 +1,6 @@
 import { MemoryRouter } from "react-router-dom";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { vi, beforeEach, afterEach } from "vitest";
+import { vi, beforeEach } from "vitest";
 import VaultDetails from "../../components/VaultDetails";
 import { AuthContext } from "../../context/AuthContext";
 
