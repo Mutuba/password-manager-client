@@ -68,6 +68,8 @@ const VaultDetails: React.FC = () => {
     setIsVaultOpen(false);
   };
 
+  if (loading) return <Spinner />;
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-lg max-w-2xl w-full">
@@ -135,8 +137,6 @@ const VaultDetails: React.FC = () => {
             />
           )}
           <div className="mt-6 flex justify-center space-x-4">
-            {loading && <Spinner />}
-
             {!isVaultOpen && (
               <>
                 <button
