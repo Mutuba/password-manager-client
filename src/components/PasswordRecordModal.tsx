@@ -131,6 +131,8 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
     }
   };
 
+  if (loading) return <Spinner />;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div
@@ -219,8 +221,6 @@ const PasswordRecordModal: React.FC<PasswordRecordModalProps> = ({
               <p className="text-red-500">{formErrors.encryption_key}</p>
             )}
           </div>
-
-          {loading && <Spinner />}
 
           {errors.length > 0 && (
             <ul className="text-red-500">

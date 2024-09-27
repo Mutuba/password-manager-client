@@ -76,13 +76,14 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
     }
   };
 
+  if (loading) return <Spinner />;
+
   return (
     <li
       data-testid="password-record-item"
       className="border border-gray-200 rounded-md p-4 relative"
     >
       <h3 className="text-xl font-bold text-gray-900 mb-2">
-        {loading && <Spinner />}
         {errors.length > 0 && (
           <div className="mb-4">
             <ul className="text-red-500">

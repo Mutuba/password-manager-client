@@ -105,6 +105,8 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
     };
   }, [showModal]);
 
+  if (loading) return <Spinner />;
+
   return (
     <div className="p-4 bg-white border border-gray-200 rounded-xl shadow-md">
       <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-300">
@@ -160,7 +162,6 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
               value={decryptionKey}
               onChange={(e) => setDecryptionKey(e.target.value)}
             />
-            {loading && <Spinner />}
             {errors.length > 0 && (
               <div className="mb-4">
                 <ul className="text-red-500">

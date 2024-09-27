@@ -37,6 +37,8 @@ const Home: React.FC = () => {
     fetchAllVaults();
   }, [vaultsUpdated]);
 
+  if (loading) return <Spinner />;
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <VaultModal
@@ -72,9 +74,7 @@ const Home: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {loading ? (
-              <Spinner />
-            ) : errors.length > 0 ? (
+            {errors.length > 0 ? (
               <div className="text-red-500">
                 {errors.map((error, index) => (
                   <p key={index}>{error}</p>

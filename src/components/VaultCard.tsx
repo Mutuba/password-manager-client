@@ -80,10 +80,12 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
   const handleAccessVault = () => {
     navigate(`/vault/${vault?.id}/details`);
   };
+
+  if (loading) return <Spinner />;
+
   return (
     <div className="bg-white border border-gray-300 rounded-xl p-6 hover:shadow-lg transition-shadow duration-300 max-w-sm relative">
       <h3 className="text-xl font-bold text-gray-900 mb-2">
-        {loading && <Spinner />}
         {errors.length > 0 && (
           <div className="mb-4">
             <ul className="text-red-500">
