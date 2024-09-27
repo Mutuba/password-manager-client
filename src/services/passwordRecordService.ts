@@ -54,7 +54,7 @@ export const deletePasswordRecord = async (
 ) => {
   try {
     return await axios.delete(
-      `${API_BASE_URL}/password_records/${passwordRecordId}/decrypt_password`,
+      `${API_BASE_URL}/password_records/${passwordRecordId}`,
       {
         headers: {
           Authorization: `Bearer ${userToken}`,
