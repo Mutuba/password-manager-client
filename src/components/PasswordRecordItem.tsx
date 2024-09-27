@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PasswordRecord } from "../types/PasswordRecordTypes";
-import { FaEllipsisV, FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEllipsisV, FaTrashAlt } from "react-icons/fa";
 import ConfirmationModal from "../shared/ConfirmationModal";
 import { AuthContext } from "../context/AuthContext";
 import { deletePasswordRecord } from "../services/passwordRecordService";
@@ -20,7 +20,6 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
   record,
   decrypted,
   onDecrypt,
-  onUpdate,
   onRecordDeleted,
 }) => {
   const authContext = useContext(AuthContext);
@@ -139,13 +138,6 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
           ref={ActionsVisibleRef}
           className="absolute right-3 top-10 bg-white border border-gray-300 rounded-lg shadow-lg z-10"
         >
-          <button
-            // onClick={onUpdate}
-            // onClick={() => setIsVaultModalOpen(true)}
-            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
-          >
-            <FaEdit /> <span>Update Record</span>
-          </button>
           <button
             onClick={() => setIsDeleteModalOpen(true)}
             className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
