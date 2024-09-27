@@ -134,8 +134,9 @@ const VaultDetails: React.FC = () => {
               className="border border-gray-300 rounded-md p-3 mb-4 w-full focus:outline-none focus:ring focus:ring-green-300"
             />
           )}
-          {loading && <Spinner />}
           <div className="mt-6 flex justify-center space-x-4">
+            {loading && <Spinner />}
+
             {!isVaultOpen && (
               <>
                 <button
