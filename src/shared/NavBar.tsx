@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
                   aria-labelledby="user-menu-button"
                   tabIndex={-1}
                 >
-                  <a
+                  {/* <a
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
                     tabIndex={-1}
                   >
                     Settings
-                  </a>
+                  </a> */}
                   <button
                     onClick={handleLogout}
                     className="block w-full px-4 py-2 text-sm text-gray-700 text-left"
