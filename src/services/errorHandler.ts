@@ -10,7 +10,7 @@ export const handleApiError = (error: any) => {
       if (data?.error) {
         throw data?.error;
       }
-      throw error;
+      throw new Error("Something went wrong. Please try again.");
     } else if (error.request) {
       throw new Error(
         "Unable to connect to the server. Please check your internet connection."

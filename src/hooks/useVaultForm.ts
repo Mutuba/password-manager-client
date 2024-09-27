@@ -47,15 +47,15 @@ export const useVaultForm = (initialVault?: Vault) => {
       setStatus(initialVault?.attributes?.status);
       setIsShared(initialVault.attributes.is_shared);
     }
-  }, [initialVault]);
+  }, []);
 
   const resetForm = () => {
     setName("");
     setUnlockCode("");
     setDescription("");
-    setVaultType("");
+    setVaultType(vaultTypeOptions[0].value);
     setSharedWith([]);
-    setStatus("");
+    setStatus(statusOptions[0].value);
     setIsShared(false);
   };
 
