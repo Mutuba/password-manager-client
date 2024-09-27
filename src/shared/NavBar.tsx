@@ -34,7 +34,6 @@ const Navbar: React.FC = () => {
 
   const { user } = authContext;
 
-  // Only render the Navbar if the user is defined
   if (!user) {
     return null;
   }
