@@ -116,19 +116,12 @@ const AuthProvider: FC<AuthProviderProps> = ({ children, initialState }) => {
     setUserToken(null);
   }, []);
 
+  if (loading) return <Spinner />;
   return (
     <AuthContext.Provider
       value={{ user, userToken, authError, loading, login, register, logout }}
     >
-      {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          <div className="w-32 h-32">
-            <Spinner />
-          </div>
-        </div>
-      ) : (
-        children
-      )}
+      {children}
     </AuthContext.Provider>
   );
 };
