@@ -95,7 +95,9 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
             </ul>
           </div>
         )}
-        {vault?.attributes?.name}
+        <p className="text-sm text-gray-700 mb-4 truncate max-w-full leading-relaxed">
+          {vault?.attributes?.name}
+        </p>
       </h3>
       {vault?.attributes?.description && (
         <p className="text-sm text-gray-700 mb-4 truncate max-w-full leading-relaxed">
