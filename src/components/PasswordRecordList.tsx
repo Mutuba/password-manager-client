@@ -76,7 +76,6 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
           record.id === updatedRecord.id ? updatedRecord : record
         )
       );
-
       setShowModal(false);
       setDecryptionKey("");
     } catch (error) {
