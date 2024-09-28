@@ -242,13 +242,16 @@ describe("Home Component", () => {
   });
 
   it("should display error message when vault deletion fails", async () => {
+    vi.mock("../../services/vaultService.ts", () => ({
+      deleteVault: vi.fn(() => Promise.reject("An error occurred.")),
+    }));
     render(
       <AuthContext.Provider
         value={{
           login: vi.fn(),
           authError: null,
           user: userMock,
-          userToken: null,
+          userToken: userToken,
           loading: false,
           register: vi.fn(),
           logout: vi.fn(),
@@ -265,7 +268,7 @@ describe("Home Component", () => {
     fireEvent.click(screen.getByText("Confirm"));
 
     await waitFor(() =>
-      expect(screen.getByText("User token is missing.")).toBeInTheDocument()
+      expect(screen.getByText("An error occurred.")).toBeInTheDocument()
     );
   });
 
