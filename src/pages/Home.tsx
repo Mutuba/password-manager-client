@@ -80,11 +80,7 @@ const Home: React.FC = () => {
               </div>
             ) : vaults.length > 0 ? (
               vaults.map((vault: Vault) => (
-                <VaultCard
-                  key={vault.id || Math.random()}
-                  vault={vault}
-                  setVaults={setVaults}
-                />
+                <VaultCard key={vault.id} vault={vault} setVaults={setVaults} />
               ))
             ) : (
               <p className="text-gray-600">You don't have any vaults yet.</p>
