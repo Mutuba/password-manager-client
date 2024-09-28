@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useContext,
-  Dispatch,
-  SetStateAction,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,10 +12,10 @@ import { FaEllipsisV, FaEdit, FaTrashAlt } from "react-icons/fa";
 
 interface VaultCardProps {
   vault: Vault;
-  setVaultsUpdated: Dispatch<SetStateAction<boolean>>;
+  setVaults: React.Dispatch<React.SetStateAction<Vault[]>>;
 }
 
-const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
+const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaults }) => {
   const authContext = useContext(AuthContext);
   const { userToken } = authContext;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -64,7 +57,9 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
     try {
       await deleteVault(userToken, vault.id);
       setIsDeleteModalOpen(false);
-      setVaultsUpdated((prev) => !prev);
+      setVaults((vaults) =>
+        vaults.filter((existingVault) => existingVault.id !== vault.id)
+      );
       const toastId = "delete-success";
       toast.dismiss(toastId);
       toast.success("Vault deleted successfully", {
@@ -168,8 +163,7 @@ const VaultCard: React.FC<VaultCardProps> = ({ vault, setVaultsUpdated }) => {
         <VaultModal
           visible={isVaultModalOpen}
           setModalVisible={setIsVaultModalOpen}
-          setVaultsUpdated={setVaultsUpdated}
-          setVaults={() => {}}
+          setVaults={setVaults}
           vault={vault}
           onClose={() => setIsVaultModalOpen(false)}
         />

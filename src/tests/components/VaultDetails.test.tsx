@@ -6,13 +6,13 @@ import { AuthContext } from "../../context/AuthContext";
 
 const renderWithProviders = (
   ui: any,
-  { user, token, error }: { user: any; token: string; error: string | null }
+  { user, token }: { user: any; token: string | null }
 ) =>
   render(
     <AuthContext.Provider
       value={{
         login: vi.fn(),
-        authError: error,
+        authError: null,
         user: user,
         userToken: token,
         loading: false,
@@ -53,7 +53,6 @@ describe("VaultDetails Component", () => {
     renderWithProviders(<VaultDetails />, {
       user: userMock,
       token: userToken,
-      error: null,
     });
 
     expect(
@@ -61,11 +60,20 @@ describe("VaultDetails Component", () => {
     ).toBeInTheDocument();
     expect(screen.getByTestId("vault-details-cancel-btn")).toBeInTheDocument();
     expect(
-      screen.getByTestId("vault-details-acess-vault-btn")
+      screen.getByTestId("vault-details-access-vault-btn")
     ).toBeInTheDocument();
   });
 
   it("should render vault details when successfully accessed", async () => {
+    renderWithProviders(<VaultDetails />, {
+      user: userMock,
+      token: userToken,
+    });
+
+    fireEvent.change(screen.getByPlaceholderText("Enter unlock code"), {
+      target: { value: "Favouritepassword123!*" },
+    });
+
     vi.mock("../../services/vaultService.ts", () => ({
       vaultLogin: vi.fn(() =>
         Promise.resolve({
@@ -73,7 +81,7 @@ describe("VaultDetails Component", () => {
             id: "3",
             type: "vault",
             attributes: {
-              id: 1,
+              id: "3",
               name: "Special Vault",
               created_at: new Date(),
               updated_at: new Date(),
@@ -94,6 +102,8 @@ describe("VaultDetails Component", () => {
               attributes: {
                 name: "Second Record",
                 username: "Ashah",
+                url: null,
+                notes: null,
                 password: "XhBBdFifBGAOffciip",
                 created_at: new Date(),
                 updated_at: new Date(),
@@ -105,6 +115,8 @@ describe("VaultDetails Component", () => {
               attributes: {
                 name: "First Record",
                 username: "Pearl",
+                url: null,
+                notes: null,
                 password: "XhBBdFifBGAOciip",
                 created_at: new Date(),
                 updated_at: new Date(),
@@ -114,16 +126,7 @@ describe("VaultDetails Component", () => {
         })
       ),
     }));
-    renderWithProviders(<VaultDetails />, {
-      user: userMock,
-      token: userToken,
-      error: null,
-    });
-
-    fireEvent.change(screen.getByPlaceholderText("Enter unlock code"), {
-      target: { value: "Favouritepassword123!*" },
-    });
-    fireEvent.click(screen.getByTestId("vault-details-acess-vault-btn"));
+    fireEvent.click(screen.getByTestId("vault-details-access-vault-btn"));
 
     await waitFor(() => {
       expect(screen.getByText("Special Vault")).toBeInTheDocument();
@@ -140,5 +143,28 @@ describe("VaultDetails Component", () => {
       expect(screen.getByText("Pearl")).toBeInTheDocument();
       expect(screen.getByText("Ashah")).toBeInTheDocument();
     });
+
+    // fireEvent.click(screen.getByTestId("back-home-vault-btn"));
   });
+
+  //   it("should show an error when accessing vault fails", async () => {
+  //     renderWithProviders(<VaultDetails />, {
+  //       user: userMock,
+  //       token: userToken,
+  //     });
+
+  //     fireEvent.change(screen.getByPlaceholderText("Enter unlock code"), {
+  //       target: { value: "Favouritepassword123!*" },
+  //     });
+
+  //     vi.mock("../../services/vaultService.ts", () => ({
+  //       vaultLogin: vi.fn(() => Promise.reject("An error occured")),
+  //     }));
+
+  //     fireEvent.click(screen.getByTestId("vault-details-access-vault-btn"));
+
+  //     await waitFor(() => {
+  //       expect(screen.getByText(/An error occured/i)).toBeInTheDocument();
+  //     });
+  //   });
 });

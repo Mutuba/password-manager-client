@@ -52,7 +52,7 @@ export const useVaultSubmit = ({
         });
       } else {
         const vaultData = await createVault(userToken, formData);
-        setVaults((prevVaults) => [...prevVaults, vaultData]);
+        setVaults((prevVaults) => [...prevVaults, vaultData.data]);
         const toastId = "create-vault-success";
         toast.dismiss(toastId);
         toast.success("New Vault successfully created.", {

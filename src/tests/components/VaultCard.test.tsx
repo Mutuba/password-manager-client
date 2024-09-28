@@ -25,7 +25,7 @@ const userMock = {
   password: "password",
 };
 
-const setVaultsUpdatedMock = vi.fn();
+const setVaults = vi.fn();
 const vaultMock = {
   id: "3",
   type: "vault",
@@ -61,10 +61,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -88,10 +85,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -117,10 +111,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -150,10 +141,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -183,10 +171,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -215,10 +200,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -250,10 +232,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -276,10 +255,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );
@@ -307,10 +283,7 @@ describe("Home Component", () => {
         }}
       >
         <MemoryRouter>
-          <VaultCard
-            vault={vaultMock}
-            setVaultsUpdated={setVaultsUpdatedMock}
-          />
+          <VaultCard vault={vaultMock} setVaults={setVaults} />
         </MemoryRouter>
       </AuthContext.Provider>
     );

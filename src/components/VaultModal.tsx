@@ -9,7 +9,6 @@ import { statusOptions, vaultTypeOptions } from "../hooks/useVaultForm";
 interface VaultModalProps {
   visible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setVaultsUpdated: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: () => void;
   setVaults: React.Dispatch<React.SetStateAction<Vault[]>>;
   vault?: Vault;
@@ -19,7 +18,6 @@ const VaultModal: React.FC<VaultModalProps> = ({
   visible,
   onClose,
   setVaults,
-  setVaultsUpdated,
   vault,
 }) => {
   const authContext = useContext(AuthContext);
@@ -48,7 +46,6 @@ const VaultModal: React.FC<VaultModalProps> = ({
     setVaults,
     onSuccess: () => {
       resetForm();
-      setVaultsUpdated((prev) => !prev);
       onClose();
     },
   });

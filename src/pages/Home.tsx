@@ -13,7 +13,6 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [vaultsUpdated, setVaultsUpdated] = useState<boolean>(false);
 
   const fetchAllVaults = async () => {
     setLoading(true);
@@ -35,7 +34,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     fetchAllVaults();
-  }, [vaultsUpdated]);
+  }, []);
 
   if (loading) return <Spinner />;
 
@@ -46,7 +45,6 @@ const Home: React.FC = () => {
         setModalVisible={setModalVisible}
         onClose={() => setModalVisible(false)}
         setVaults={setVaults}
-        setVaultsUpdated={setVaultsUpdated}
       />
       <main className="flex-grow flex flex-col items-center justify-center p-6 space-y-8">
         <div className="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4">
@@ -85,7 +83,7 @@ const Home: React.FC = () => {
                 <VaultCard
                   key={vault.id || Math.random()}
                   vault={vault}
-                  setVaultsUpdated={setVaultsUpdated}
+                  setVaults={setVaults}
                 />
               ))
             ) : (

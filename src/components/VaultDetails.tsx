@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -48,7 +48,6 @@ const VaultDetails: React.FC = () => {
       setVault(responseData.data);
       setRecords(responseData.included);
       setIsVaultOpen(true);
-      setUnlockCode("");
       const toastId = "login-success";
       toast.dismiss(toastId);
       toast.success("Logged into the vault successfully", {
@@ -65,6 +64,7 @@ const VaultDetails: React.FC = () => {
   const handleVaultClose = () => {
     setVault(null);
     setRecords(null);
+    setUnlockCode("");
     setIsVaultOpen(false);
   };
 
@@ -148,7 +148,7 @@ const VaultDetails: React.FC = () => {
                 </button>
 
                 <button
-                  data-testid="vault-details-acess-vault-btn"
+                  data-testid="vault-details-access-vault-btn"
                   className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200"
                   onClick={handleVaultAccess}
                 >
@@ -170,6 +170,7 @@ const VaultDetails: React.FC = () => {
         {isVaultOpen && (
           <div className="mt-6 flex justify-center">
             <button
+              data-testid="back-home-vault-btn"
               className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
               onClick={() => navigate("/")}
             >

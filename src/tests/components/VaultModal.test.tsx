@@ -86,7 +86,6 @@ describe("Home Component", () => {
             onClose={vi.fn()}
             setVaults={vi.fn()}
             visible={true}
-            setVaultsUpdated={setVaultsUpdatedMock}
           />
         </MemoryRouter>
       </AuthContext.Provider>
@@ -124,7 +123,6 @@ describe("Home Component", () => {
             onClose={vi.fn()}
             setVaults={vi.fn()}
             visible={true}
-            setVaultsUpdated={setVaultsUpdatedMock}
           />
         </MemoryRouter>
       </AuthContext.Provider>
@@ -171,7 +169,6 @@ describe("Home Component", () => {
             onClose={vi.fn()}
             setVaults={vi.fn()}
             visible={true}
-            setVaultsUpdated={setVaultsUpdatedMock}
           />
         </MemoryRouter>
       </AuthContext.Provider>
@@ -219,7 +216,6 @@ describe("Home Component", () => {
             onClose={vi.fn()}
             setVaults={vi.fn()}
             visible={true}
-            setVaultsUpdated={setVaultsUpdatedMock}
           />
         </MemoryRouter>
       </AuthContext.Provider>
@@ -262,7 +258,6 @@ describe("Home Component", () => {
             onClose={vi.fn()}
             setVaults={vi.fn()}
             visible={true}
-            setVaultsUpdated={setVaultsUpdatedMock}
           />
         </MemoryRouter>
       </AuthContext.Provider>
