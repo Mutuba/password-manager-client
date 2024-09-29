@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { handleApiError } from "./errorHandler";
 import { PasswordRecordData } from "./../types/PasswordRecordTypes";
 
@@ -21,8 +21,9 @@ export const createPasswordRecord = async (
       }
     );
     return response.data;
-  } catch (error: any) {
-    handleApiError(error);
+  } catch (error) {
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };
 
@@ -62,8 +63,9 @@ export const deletePasswordRecord = async (
         },
       }
     );
-  } catch (error: any) {
-    handleApiError(error);
+  } catch (error) {
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };
 
@@ -84,7 +86,8 @@ export const updatePasswordRecord = async (
       }
     );
     return response.data;
-  } catch (error: any) {
-    handleApiError(error);
+  } catch (error) {
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };

@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import { vaultData } from "../types/VaultTypes";
 import { handleApiError } from "./errorHandler";
 
@@ -10,7 +10,7 @@ export const vaultLogin = async (
   vaultData: { unlock_code: string }
 ) => {
   try {
-    const response: AxiosResponse = await axios.post(
+    const response = await axios.post(
       `${API_BASE_URL}/vaults/${vaultId}/login`,
       vaultData,
       {
