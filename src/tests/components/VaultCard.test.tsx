@@ -4,15 +4,12 @@ import * as router from "react-router";
 import { vi } from "vitest";
 import VaultCard from "../../components/VaultCard";
 import { AuthContext } from "../../context/AuthContext";
+import * as vaultService from "../../services/vaultService";
 
 const navigate = vi.fn();
 
 beforeEach(() => {
   vi.spyOn(router, "useNavigate").mockImplementation(() => navigate);
-});
-
-afterAll(() => {
-  vi.restoreAllMocks();
 });
 
 const userToken = "random-token";
@@ -215,10 +212,6 @@ describe("Home Component", () => {
   });
 
   it("should navigate to the vault details page on Access Vault click", async () => {
-    vi.mock("../../services/vaultService.ts", () => ({
-      deleteVault: vi.fn(() => Promise.resolve()),
-    }));
-
     render(
       <AuthContext.Provider
         value={{
@@ -242,9 +235,11 @@ describe("Home Component", () => {
   });
 
   it("should display error message when vault deletion fails", async () => {
-    vi.mock("../../services/vaultService.ts", () => ({
-      deleteVault: vi.fn(() => Promise.reject("An error occurred.")),
-    }));
+    const deleteVaultSpy = vi.spyOn(vaultService, "deleteVault");
+    deleteVaultSpy.mockRejectedValue(
+      "An error occurred when deleting the vault."
+    );
+
     render(
       <AuthContext.Provider
         value={{
@@ -268,7 +263,9 @@ describe("Home Component", () => {
     fireEvent.click(screen.getByText("Confirm"));
 
     await waitFor(() =>
-      expect(screen.getByText("An error occurred.")).toBeInTheDocument()
+      expect(
+        screen.getByText("An error occurred when deleting the vault.")
+      ).toBeInTheDocument()
     );
   });
 
