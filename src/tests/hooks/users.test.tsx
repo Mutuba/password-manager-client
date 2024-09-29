@@ -1,7 +1,7 @@
 import { createUser, fetchUsers } from "./users.service";
 import axios from "axios";
 
-jest.mock("axios");
+vi.mock("axios");
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
