@@ -6,9 +6,10 @@ import {
   fireEvent,
   act,
 } from "@testing-library/react";
-import { vi, beforeEach } from "vitest";
+import { vi } from "vitest";
 import VaultDetails from "../../components/VaultDetails";
 import { AuthContext } from "../../context/AuthContext";
+import * as vaultService from "../../services/vaultService";
 
 const renderWithProviders = (
   ui: any,
@@ -51,10 +52,6 @@ vi.mock("react-router-dom", async () => {
 });
 
 describe("VaultDetails Component", () => {
-  beforeEach(() => {
-    vi.restoreAllMocks();
-    vi.clearAllMocks();
-  });
   it("should render initial modal with unlock code input and buttons", async () => {
     renderWithProviders(<VaultDetails />, {
       user: userMock,
@@ -71,6 +68,56 @@ describe("VaultDetails Component", () => {
   });
 
   it("should render vault details when successfully accessed", async () => {
+    const vaultLoginSpy = vi.spyOn(vaultService, "vaultLogin");
+    vaultLoginSpy.mockResolvedValue({
+      data: {
+        id: "3",
+        type: "vault",
+        attributes: {
+          id: "3",
+          name: "Special Vault",
+          created_at: new Date(),
+          updated_at: new Date(),
+          last_accessed_at: new Date(),
+          description: "A special vault",
+          vault_type: "personal",
+          status: "active",
+          shared_with: [],
+          access_count: 0,
+          is_shared: false,
+          failed_attempts: 0,
+        },
+      },
+      included: [
+        {
+          id: "2",
+          type: "password_record",
+          attributes: {
+            name: "Second Record",
+            username: "Ashah",
+            url: null,
+            notes: null,
+            password: "XhBBdFifBGAOffciip",
+            created_at: new Date(),
+            updated_at: new Date(),
+          },
+        },
+        {
+          id: "1",
+          type: "password_record",
+          attributes: {
+            name: "First Record",
+            username: "Pearl",
+            url: null,
+            notes: null,
+            password: "XhBBdFifBGAOciip",
+            created_at: new Date(),
+            updated_at: new Date(),
+          },
+        },
+      ],
+    });
+
     renderWithProviders(<VaultDetails />, {
       user: userMock,
       token: userToken,
@@ -80,58 +127,6 @@ describe("VaultDetails Component", () => {
       target: { value: "Favouritepassword123!*" },
     });
 
-    vi.mock("../../services/vaultService.ts", () => ({
-      vaultLogin: vi.fn(() =>
-        Promise.resolve({
-          data: {
-            id: "3",
-            type: "vault",
-            attributes: {
-              id: "3",
-              name: "Special Vault",
-              created_at: new Date(),
-              updated_at: new Date(),
-              last_accessed_at: new Date(),
-              description: "A special vault",
-              vault_type: "personal",
-              status: "active",
-              shared_with: [],
-              access_count: 0,
-              is_shared: false,
-              failed_attempts: 0,
-            },
-          },
-          included: [
-            {
-              id: "2",
-              type: "password_record",
-              attributes: {
-                name: "Second Record",
-                username: "Ashah",
-                url: null,
-                notes: null,
-                password: "XhBBdFifBGAOffciip",
-                created_at: new Date(),
-                updated_at: new Date(),
-              },
-            },
-            {
-              id: "1",
-              type: "password_record",
-              attributes: {
-                name: "First Record",
-                username: "Pearl",
-                url: null,
-                notes: null,
-                password: "XhBBdFifBGAOciip",
-                created_at: new Date(),
-                updated_at: new Date(),
-              },
-            },
-          ],
-        })
-      ),
-    }));
     fireEvent.click(screen.getByTestId("vault-details-access-vault-btn"));
 
     await waitFor(() => {
@@ -151,26 +146,29 @@ describe("VaultDetails Component", () => {
     });
   });
 
-  //   it("should show an error when accessing vault fails", async () => {
-  //     renderWithProviders(<VaultDetails />, {
-  //       user: userMock,
-  //       token: userToken,
-  //     });
+  it("should show an error when accessing vault fails", async () => {
+    const vaultLoginSpy = vi.spyOn(vaultService, "vaultLogin");
+    vaultLoginSpy.mockRejectedValue(
+      "An error has occurred while accessing the vault."
+    );
 
-  //     fireEvent.change(screen.getByPlaceholderText("Enter unlock code"), {
-  //       target: { value: "Favouritepassword123!*" },
-  //     });
+    renderWithProviders(<VaultDetails />, {
+      user: userMock,
+      token: userToken,
+    });
 
-  //     vi.mock("../../services/vaultService.ts", () => ({
-  //       vaultLogin: vi.fn(() => Promise.reject("An error occured")),
-  //     }));
+    fireEvent.change(screen.getByPlaceholderText("Enter unlock code"), {
+      target: { value: "Favouritepassword123!*" },
+    });
 
-  //     await act(async () => {
-  //       fireEvent.click(screen.getByTestId("vault-details-access-vault-btn"));
-  //     });
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("vault-details-access-vault-btn"));
+    });
 
-  //     await waitFor(() => {
-  //       expect(screen.getByText(/An error occured/i)).toBeInTheDocument();
-  //     });
-  //   });
+    await waitFor(() => {
+      expect(
+        screen.getByText(/An error has occurred while accessing the vault./i)
+      ).toBeInTheDocument();
+    });
+  });
 });
