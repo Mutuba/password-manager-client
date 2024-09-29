@@ -23,7 +23,8 @@ const Home: React.FC = () => {
     }
 
     try {
-      const vaultsData = await fetchVaults(userToken);
+      const response = await fetchVaults(userToken);
+      const vaultsData = response.data;
       setVaults(vaultsData);
     } catch (err: any) {
       setErrors(Array.isArray(err) ? err : [err]);

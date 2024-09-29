@@ -34,7 +34,7 @@ export const fetchVaults = async (userToken: string) => {
         Authorization: `Bearer ${userToken}`,
       },
     });
-    return response.data.data;
+    return response.data;
   } catch (error) {
     const errors = error as Error | AxiosError;
     handleApiError(errors);

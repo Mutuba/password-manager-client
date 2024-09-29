@@ -3,13 +3,10 @@ import { MemoryRouter } from "react-router-dom";
 import { vi } from "vitest";
 import Home from "../../pages/Home";
 import { AuthContext } from "../../context/AuthContext";
-
-afterAll(() => {
-  vi.restoreAllMocks();
-});
+import * as vaultService from "../../services/vaultService";
 
 const userToken = "random-token";
-const vaultDataMock = [
+const vaultsDataMock = [
   {
     id: 3,
     type: "vault",
@@ -42,10 +39,6 @@ const userMock = {
   email: "johndoe@example.com",
   password: "password",
 };
-
-vi.mock("../../services/vaultService.ts", () => ({
-  fetchVaults: vi.fn(() => Promise.resolve(vaultDataMock)),
-}));
 
 describe("Home Component", () => {
   it("should display the user's first name if logged in", async () => {
@@ -101,6 +94,8 @@ describe("Home Component", () => {
   });
 
   it("should display vaults after fetching", async () => {
+    const fetchVaultsSpy = vi.spyOn(vaultService, "fetchVaults");
+    fetchVaultsSpy.mockResolvedValue({ data: vaultsDataMock });
     render(
       <AuthContext.Provider
         value={{
