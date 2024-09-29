@@ -77,7 +77,7 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
     }
   };
 
-  const hidePassword = () => {
+  const maskPassword = () => {
     if (!currentRecord) {
       setErrors(["Missing record or user token."]);
       return;
@@ -134,7 +134,7 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
               decrypted={decryptedRecords.includes(record.id)}
               onDecrypt={() => handleToggleDecryptModal(record)}
               onRecordDeleted={handleRecordDeleted}
-              hidePassword={hidePassword}
+              maskPassword={maskPassword}
             />
           ))}
         </ul>

@@ -95,6 +95,7 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
           </div>
         )}
       </h3>
+      x
       <p className="text-gray-600">
         <strong>Username:</strong> {record.attributes.username}
       </p>
@@ -103,9 +104,10 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
         {decrypted ? record.attributes.password : "••••••••"}
         <button
           onClick={decrypted ? maskPassword : onDecrypt}
-          className="ml-2 text-blue-500 hover:underline"
+          className="ml-2 text-blue-500 hover:text-blue-700 relative hover:scale-105 transition-transform duration-200"
         >
           {decrypted ? "Mask" : "👁️ View"}
+          <span className="absolute bottom-0 left-0 w-0 h-1 bg-blue-500 transition-all duration-300 hover:w-full"></span>
         </button>
       </p>
       {record.attributes.url && (
@@ -146,7 +148,6 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
           </button>
         </div>
       )}
-
       {isDeleteModalOpen && (
         <ConfirmationModal
           isOpen={isDeleteModalOpen}
