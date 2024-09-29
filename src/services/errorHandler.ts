@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
-export const handleApiError = (error: any) => {
+export const handleApiError = (error: AxiosError | Error) => {
   if (axios.isAxiosError(error)) {
     if (error.response) {
       const { data } = error.response;

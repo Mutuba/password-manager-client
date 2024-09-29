@@ -1,6 +1,12 @@
 {
   "compilerOptions": {
-    "types": ["node", "vitest", "@testing-library/jest-dom"],
+    "types": [
+      "node",
+      "vitest",
+      "vite/client",
+      "@testing-library/jest-dom",
+      "vitest/globals"
+    ],
     "target": "ES6",
     "module": "ESNext",
     "jsx": "react-jsx",

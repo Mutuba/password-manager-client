@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { vaultData } from "../types/VaultTypes";
 import { handleApiError } from "./errorHandler";
 
@@ -10,7 +10,7 @@ export const vaultLogin = async (
   vaultData: { unlock_code: string }
 ) => {
   try {
-    const response = await axios.post(
+    const response: AxiosResponse = await axios.post(
       `${API_BASE_URL}/vaults/${vaultId}/login`,
       vaultData,
       {
@@ -21,8 +21,9 @@ export const vaultLogin = async (
       }
     );
     return response.data;
-  } catch (error: any) {
-    handleApiError(error);
+  } catch (error) {
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };
 
@@ -34,8 +35,9 @@ export const fetchVaults = async (userToken: string) => {
       },
     });
     return response.data.data;
-  } catch (error: any) {
-    handleApiError(error);
+  } catch (error) {
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };
 
@@ -48,8 +50,9 @@ export const createVault = async (userToken: string, vaultData: vaultData) => {
       },
     });
     return response.data;
-  } catch (error: any) {
-    handleApiError(error);
+  } catch (error) {
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };
 
@@ -70,8 +73,9 @@ export const updateVault = async (
       }
     );
     return response.data;
-  } catch (error: any) {
-    handleApiError(error);
+  } catch (error) {
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };
 
@@ -84,6 +88,7 @@ export const deleteVault = async (userToken: string, vaultId: string) => {
       },
     });
   } catch (error: any) {
-    handleApiError(error);
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };

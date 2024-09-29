@@ -34,7 +34,6 @@ export const useVaultSubmit = ({
       setLoading(false);
       return;
     }
-
     setLoading(true);
     try {
       if (vault) {
@@ -45,24 +44,24 @@ export const useVaultSubmit = ({
             vault.id === vaultData.id ? vaultData : vault
           )
         );
-        const toastId = "create-vault-success";
+        const toastId = "update-vault-success";
         toast.dismiss(toastId);
         toast.success("Vault successfully updated.", {
           toastId,
         });
       } else {
-        const vaultData = await createVault(userToken, formData);
-        setVaults((prevVaults) => [...prevVaults, vaultData.data]);
+        const response = await createVault(userToken, formData);
+        const vaultData = response.data;
+        setVaults((prevVaults) => [...prevVaults, vaultData]);
         const toastId = "create-vault-success";
         toast.dismiss(toastId);
         toast.success("New Vault successfully created.", {
           toastId,
         });
       }
-
       onSuccess();
-    } catch (err: any) {
-      setErrors(Array.isArray(err) ? err : [err.message]);
+    } catch (err) {
+      setErrors(Array.isArray(err) ? err : [err]);
     } finally {
       setLoading(false);
     }

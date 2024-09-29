@@ -1,5 +1,11 @@
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  act,
+} from "@testing-library/react";
 import { vi, beforeEach } from "vitest";
 import VaultDetails from "../../components/VaultDetails";
 import { AuthContext } from "../../context/AuthContext";
@@ -143,8 +149,6 @@ describe("VaultDetails Component", () => {
       expect(screen.getByText("Pearl")).toBeInTheDocument();
       expect(screen.getByText("Ashah")).toBeInTheDocument();
     });
-
-    // fireEvent.click(screen.getByTestId("back-home-vault-btn"));
   });
 
   //   it("should show an error when accessing vault fails", async () => {
@@ -161,7 +165,9 @@ describe("VaultDetails Component", () => {
   //       vaultLogin: vi.fn(() => Promise.reject("An error occured")),
   //     }));
 
-  //     fireEvent.click(screen.getByTestId("vault-details-access-vault-btn"));
+  //     await act(async () => {
+  //       fireEvent.click(screen.getByTestId("vault-details-access-vault-btn"));
+  //     });
 
   //     await waitFor(() => {
   //       expect(screen.getByText(/An error occured/i)).toBeInTheDocument();
