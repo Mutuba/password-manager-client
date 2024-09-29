@@ -15,12 +15,12 @@ export interface PasswordRecordAttributes {
   url: string | null;
   notes: string | null;
   password: string;
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface PasswordRecord {
   id: string;
-  type: "password_record";
+  type: string;
   attributes: PasswordRecordAttributes;
 }

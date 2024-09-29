@@ -44,8 +44,9 @@ export const decryptPassword = async (
       }
     );
     return response.data;
-  } catch (error: any) {
-    handleApiError(error);
+  } catch (error) {
+    const errors = error as Error | AxiosError;
+    handleApiError(errors);
   }
 };
 

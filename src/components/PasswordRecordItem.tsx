@@ -12,7 +12,6 @@ interface PasswordRecordItemProps {
   record: PasswordRecord;
   decrypted: boolean;
   onDecrypt: () => void;
-  onUpdate: () => void;
   onRecordDeleted: (record: PasswordRecord) => void;
 }
 

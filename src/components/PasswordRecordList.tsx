@@ -40,8 +40,6 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
     }
   };
 
-  const handleUpdate = () => {};
-
   const handleRecordDeleted = (deletedRecord: PasswordRecord) => {
     setUpdatedRecords((prevRecords) =>
       prevRecords.filter((record) => record.id !== deletedRecord.id)
@@ -134,7 +132,6 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
               record={record}
               decrypted={decryptedRecords.includes(record.id)}
               onDecrypt={() => toggleModal(record)}
-              onUpdate={handleUpdate}
               onRecordDeleted={handleRecordDeleted}
             />
           ))}
