@@ -53,7 +53,7 @@ const VaultDetails: React.FC = () => {
       toast.success("Logged into the vault successfully", {
         toastId,
       });
-    } catch (err: any) {
+    } catch (err) {
       setErrors(Array.isArray(err) ? err : [err]);
       setRecords(null);
     } finally {

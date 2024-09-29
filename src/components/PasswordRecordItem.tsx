@@ -12,6 +12,7 @@ interface PasswordRecordItemProps {
   record: PasswordRecord;
   decrypted: boolean;
   onDecrypt: () => void;
+  hidePassword: () => void;
   onRecordDeleted: (record: PasswordRecord) => void;
 }
 
@@ -19,6 +20,7 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
   record,
   decrypted,
   onDecrypt,
+  hidePassword,
   onRecordDeleted,
 }) => {
   const authContext = useContext(AuthContext);
@@ -99,14 +101,12 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
       <p className="text-gray-600">
         <strong>Password:</strong>{" "}
         {decrypted ? record.attributes.password : "••••••••"}
-        {!decrypted && (
-          <button
-            onClick={onDecrypt}
-            className="ml-2 text-blue-500 hover:underline"
-          >
-            👁️ View
-          </button>
-        )}
+        <button
+          onClick={decrypted ? hidePassword : onDecrypt} // Toggle between hide/show password
+          className="ml-2 text-blue-500 hover:underline"
+        >
+          {decrypted ? "Hide" : "👁️ View"}
+        </button>
       </p>
       {record.attributes.url && (
         <p className="text-gray-600">

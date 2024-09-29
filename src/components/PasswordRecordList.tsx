@@ -5,6 +5,7 @@ import Spinner from "../shared/Spinner";
 import { Vault } from "src/types/VaultTypes";
 import PasswordRecordModal from "./PasswordRecordModal";
 import PasswordRecordItem from "./PasswordRecordItem";
+import DecryptPasswordModal from "./DecryptPasswordModal";
 
 interface PasswordRecordListProps {
   records: PasswordRecord[];
@@ -17,9 +18,7 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
   userToken,
   vault,
 }) => {
-  const [decryptedRecords, setDecryptedRecords] = useState<string[]>([]);
   const [decryptionKey, setDecryptionKey] = useState<string>("");
-  const [showModal, setShowModal] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] = useState<PasswordRecord | null>(
     null
   );
@@ -28,16 +27,12 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
   const [updatedRecords, setUpdatedRecords] =
     useState<PasswordRecord[]>(records);
   const [showAddRecordModal, setShowAddRecordModal] = useState<boolean>(false);
+  const [showDecryptModal, setShowDecryptModal] = useState<boolean>(false);
+  const [decryptedRecords, setDecryptedRecords] = useState<string[]>([]);
 
-  const toggleModal = (record: PasswordRecord) => {
-    if (currentRecord?.id === record.id && showModal) {
-      setShowModal(false);
-      setCurrentRecord(null);
-      setErrors([]);
-    } else {
-      setCurrentRecord(record);
-      setShowModal(true);
-    }
+  const handleToggleDecryptModal = (record: PasswordRecord) => {
+    setCurrentRecord(record);
+    setShowDecryptModal((prev) => !prev);
   };
 
   const handleRecordDeleted = (deletedRecord: PasswordRecord) => {
@@ -47,35 +42,34 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
   };
 
   const handleDecryptPassword = async () => {
-    setLoading(true);
     if (!currentRecord || !userToken) {
       setErrors(["Missing record or user token."]);
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
       const response = await decryptPassword(userToken, currentRecord.id, {
         encryption_key: decryptionKey,
       });
-      const decryptedPassword = response.password;
-      setDecryptedRecords((prev) => [...prev, currentRecord.id]);
 
+      setDecryptedRecords((prevRecords) => [...prevRecords, currentRecord.id]);
       const updatedRecord = {
         ...currentRecord,
         attributes: {
           ...currentRecord.attributes,
-          password: decryptedPassword,
+          password: response.password,
         },
       };
 
-      setUpdatedRecords((prev) =>
-        prev.map((record) =>
+      setUpdatedRecords((prevRecords) =>
+        prevRecords.map((record) =>
           record.id === updatedRecord.id ? updatedRecord : record
         )
       );
-      setShowModal(false);
+
       setDecryptionKey("");
+      setShowDecryptModal(false);
     } catch (error) {
       setErrors(Array.isArray(error) ? error : [error]);
     } finally {
@@ -83,24 +77,31 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
     }
   };
 
-  const showModalRef = useRef<HTMLDivElement>(null);
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (
-      showModalRef.current &&
-      !showModalRef.current.contains(event.target as Node)
-    ) {
-      setShowModal(false);
+  const hidePassword = () => {
+    if (!currentRecord) {
+      setErrors(["Missing record or user token."]);
+      return;
     }
+
+    setDecryptedRecords((prevRecords) =>
+      prevRecords.filter((recordId) => recordId !== currentRecord.id)
+    );
   };
 
+  const modalRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (showModal) {
-      document.addEventListener("mousedown", handleOutsideClick);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setShowDecryptModal(false);
+      }
     };
-  }, [showModal]);
+    if (showDecryptModal)
+      document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [showDecryptModal]);
 
   if (loading) return <Spinner />;
 
@@ -131,8 +132,9 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
               key={record.id}
               record={record}
               decrypted={decryptedRecords.includes(record.id)}
-              onDecrypt={() => toggleModal(record)}
+              onDecrypt={() => handleToggleDecryptModal(record)}
               onRecordDeleted={handleRecordDeleted}
+              hidePassword={hidePassword}
             />
           ))}
         </ul>
@@ -148,41 +150,15 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
         />
       )}
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div ref={showModalRef} className="bg-white p-4 rounded-lg shadow-lg">
-            <h2 className="text-lg font-bold">Enter Decryption Key</h2>
-            <input
-              type="password"
-              className="border border-gray-300 p-2 mt-2 w-full"
-              value={decryptionKey}
-              onChange={(e) => setDecryptionKey(e.target.value)}
-            />
-            {errors.length > 0 && (
-              <div className="mb-4">
-                <ul className="text-red-500">
-                  {errors.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="mt-4 flex justify-between">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 rounded-lg border"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDecryptPassword}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              >
-                Decrypt
-              </button>
-            </div>
-          </div>
-        </div>
+      {showDecryptModal && currentRecord && (
+        <DecryptPasswordModal
+          modalRef={modalRef}
+          decryptionKey={decryptionKey}
+          setDecryptionKey={setDecryptionKey}
+          handleDecrypt={handleDecryptPassword}
+          errors={errors}
+          onClose={() => setShowDecryptModal(false)}
+        />
       )}
     </div>
   );
