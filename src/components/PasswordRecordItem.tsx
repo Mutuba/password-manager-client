@@ -142,6 +142,7 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
           className="absolute right-3 top-10 bg-white border border-gray-300 rounded-lg shadow-lg z-10"
         >
           <button
+            data-testid="record-delete-button"
             onClick={() => setIsDeleteModalOpen(true)}
             className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
           >
@@ -152,10 +153,10 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
       {isDeleteModalOpen && (
         <ConfirmationModal
           isOpen={isDeleteModalOpen}
-          title="Delete Vault"
+          title="Delete Vault?"
           message={
             <>
-              Are you sure you want to delete the vault?
+              Are you sure you want to delete the record?
               <strong>{record?.attributes?.name}</strong>? This action cannot be
               undone.
             </>
