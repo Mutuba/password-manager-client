@@ -6,7 +6,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-
 import Home from "./pages/Home";
 import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";

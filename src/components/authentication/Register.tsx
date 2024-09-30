@@ -32,7 +32,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-screen bg-gray-100 bg-vault-bg bg-no-repeat bg-cover">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded shadow-md w-96"
