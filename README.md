@@ -57,3 +57,16 @@ cd vault-security-frontend
 Using npm:
 
 `npm install`
+
+3. Configure Environment Variables
+
+Create a .env file at the root of your project with the following environment variables:
+
+```javascript
+REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_TOAST_POSITION="top-right"
+
+```
+
+- REACT_APP_API_URL: The URL of your backend API server (make sure the backend is running).
+- REACT_APP_TOAST_POSITION: Position of Toast notifications (optional).
