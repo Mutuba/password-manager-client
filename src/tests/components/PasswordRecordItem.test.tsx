@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { AxiosResponse, AxiosRequestHeaders } from "axios";
+import { AxiosRequestHeaders } from "axios";
 import PasswordRecordItem from "../../components/PasswordRecordItem";
 import { AuthContext } from "../../context/AuthContext";
 import * as passwordRecordService from "../../services/passwordRecordService";
