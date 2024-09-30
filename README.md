@@ -64,7 +64,6 @@ Create a .env file at the root of your project with the following environment va
 
 ```javascript
 REACT_APP_API_URL=http://localhost:5000/api
-REACT_APP_TOAST_POSITION="top-right"
 
 ```
 
