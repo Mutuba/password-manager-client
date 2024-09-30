@@ -69,3 +69,105 @@ REACT_APP_API_URL=http://localhost:5000/api
 
 - REACT_APP_API_URL: The URL of your backend API server (make sure the backend is running).
 - REACT_APP_TOAST_POSITION: Position of Toast notifications (optional).
+
+## Running the Application
+
+1. Start the Development Server
+
+To run the app in development mode:
+
+`npm run dev`
+
+## Folder Structure
+
+.
+├── README.md
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│ ├── \_redirects
+│ └── vite.svg
+├── setupTests.ts
+├── src
+│ ├── App.tsx
+│ ├── assets
+│ │ ├── images
+│ │ │ ├── vault-background.svg
+│ │ │ └── vault-bg.svg
+│ │ └── logo.svg
+│ ├── components
+│ │ ├── DecryptPasswordModal.tsx
+│ │ ├── PasswordRecordItem.tsx
+│ │ ├── PasswordRecordList.tsx
+│ │ ├── PasswordRecordModal.tsx
+│ │ ├── VaultCard.tsx
+│ │ ├── VaultDetails.tsx
+│ │ ├── VaultModal.tsx
+│ │ └── authentication
+│ │ ├── Login.tsx
+│ │ └── Register.tsx
+│ ├── context
+│ │ └── AuthContext.tsx
+│ ├── hooks
+│ │ ├── useVaultForm.ts
+│ │ └── useVaultSubmit.ts
+│ ├── index.css
+│ ├── main.tsx
+│ ├── pages
+│ │ └── Home.tsx
+│ ├── services
+│ │ ├── errorHandler.ts
+│ │ ├── passwordRecordService.ts
+│ │ └── vaultService.ts
+│ ├── shared
+│ │ ├── ConfirmationModal.tsx
+│ │ ├── NavBar.tsx
+│ │ └── Spinner.tsx
+│ ├── tests
+│ │ ├── components
+│ │ │ ├── DecryptPasswordModal.test.tsx
+│ │ │ ├── PasswordRecordItem.test.tsx
+│ │ │ ├── PasswordRecordList.test.tsx
+│ │ │ ├── PasswordRecordModal.test.tsx
+│ │ │ ├── VaultCard.test.tsx
+│ │ │ ├── VaultDetails.test.tsx
+│ │ │ ├── VaultModal.test.tsx
+│ │ │ └── authentication
+│ │ │ ├── Login.test.tsx
+│ │ │ └── Register.test.tsx
+│ │ ├── hooks
+│ │ │ ├── useVaultSubmit.test.tsx
+│ │ │ ├── users.service.tsx
+│ │ │ └── users.test.tsx
+│ │ └── pages
+│ │ └── Home.test.tsx
+│ ├── types
+│ │ ├── AuthTypes.ts
+│ │ ├── PasswordRecordTypes.ts
+│ │ └── VaultTypes.ts
+│ └── vite-env.d.ts
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
+## Key Components
+
+1. Authentication Context (src/context/AuthContext.tsx)
+   Handles the global state for user authentication using the React Context API.
+
+2. ProtectedRoute (src/App.tsx)
+   Protects certain routes and redirects unauthorized users to the login page.
+
+3. Navbar (src/shared/NavBar.tsx)
+   Displays the navigation bar for navigating between different sections of the app.
+
+4. VaultDetails (src/components/VaultDetails.tsx)
+   Displays detailed information about a specific vault, requiring a decryption key for access.
+
+5. Toast Notifications
+   Integrated via react-toastify, provides visual feedback for various user actions.
