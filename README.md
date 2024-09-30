@@ -180,11 +180,11 @@ To run the app in development mode:
 
 ## Contributing
 
-We welcome contributions to improve the app! Please follow these steps:
+I welcome contributions to improve the app! Please follow these steps:
 
-Fork the repository.
-Create a new feature branch (git checkout -b feature/your-feature-name).
-Make your changes.
-Commit your changes (git commit -m 'Add new feature').
-Push the branch (git push origin feature/your-feature-name).
-Open a pull request
+- Fork the repository.
+- Create a new feature branch (git checkout -b feature/your-feature-name).
+- Make your changes.
+- Commit your changes (git commit -m 'Add new feature').
+- Push the branch (git push origin feature/your-feature-name).
+- Open a pull request
