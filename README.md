@@ -80,7 +80,7 @@ To run the app in development mode:
 
 ## Folder Structure
 
-.
+```javascript
 ├── README.md
 ├── eslint.config.js
 ├── index.html
@@ -154,6 +154,7 @@ To run the app in development mode:
 ├── tsconfig.json
 ├── tsconfig.node.json
 └── vite.config.ts
+```
 
 ## Key Components
 
