@@ -153,4 +153,72 @@ describe("PasswordRecordList", () => {
       expect(screen.queryByText("DecryptedPassword123")).not.toBeInTheDocument()
     );
   });
+
+  it("should display an error message when decryption fails", async () => {
+    const decryptPasswordSpy = vi.spyOn(
+      passwordRecordService,
+      "decryptPassword"
+    );
+    decryptPasswordSpy.mockRejectedValue("Decryption failed");
+
+    render(
+      <PasswordRecordList
+        records={recordList}
+        vault={vaultMock}
+        userToken={userToken}
+      />
+    );
+    const decryptModalLauncher = screen.getByTestId("mask-unmask-password-btn");
+    fireEvent.click(decryptModalLauncher);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("decrypt-modal")).toBeVisible();
+      expect(
+        screen.getByPlaceholderText("Enter decryption key")
+      ).toBeInTheDocument();
+    });
+
+    const decryptionKeyInput = screen.getByPlaceholderText(
+      "Enter decryption key"
+    );
+    fireEvent.change(decryptionKeyInput, {
+      target: { value: "some-random-decryption-key" },
+    });
+
+    const decryptButton = screen.getByTestId("decrypt-password-button");
+    fireEvent.click(decryptButton);
+
+    await waitFor(() =>
+      expect(screen.getByText("Decryption failed")).toBeInTheDocument()
+    );
+  });
+
+  it("should close the decrypt modal when clicking outside", async () => {
+    render(
+      <PasswordRecordList
+        records={recordList}
+        vault={vaultMock}
+        userToken={userToken}
+      />
+    );
+    const decryptModalLauncher = screen.getByTestId("mask-unmask-password-btn");
+    fireEvent.click(decryptModalLauncher);
+    const modal = screen.getByTestId("decrypt-modal");
+    fireEvent.mouseDown(document.body);
+    await waitFor(() => expect(modal).not.toBeInTheDocument());
+  });
+
+  it("should display a message when no records are available", () => {
+    render(
+      <PasswordRecordList
+        records={[]}
+        vault={vaultMock}
+        userToken={userToken}
+      />
+    );
+
+    expect(
+      screen.getByText("No records yet, add some records.")
+    ).toBeInTheDocument();
+  });
 });
