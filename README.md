@@ -159,16 +159,21 @@ To run the app in development mode:
 ## Key Components
 
 1. Authentication Context (src/context/AuthContext.tsx)
-   Handles the global state for user authentication using the React Context API.
+
+Handles the global state for user authentication using the React Context API.
 
 2. ProtectedRoute (src/App.tsx)
-   Protects certain routes and redirects unauthorized users to the login page.
+
+Protects certain routes and redirects unauthorized users to the login page.
 
 3. Navbar (src/shared/NavBar.tsx)
-   Displays the navigation bar for navigating between different sections of the app.
+
+Displays the navigation bar for navigating between different sections of the app.
 
 4. VaultDetails (src/components/VaultDetails.tsx)
-   Displays detailed information about a specific vault, requiring a decryption key for access.
+
+Displays detailed information about a specific vault, requiring a decryption key for access.
 
 5. Toast Notifications
-   Integrated via react-toastify, provides visual feedback for various user actions.
+
+Integrated via react-toastify, provides visual feedback for various user actions.
