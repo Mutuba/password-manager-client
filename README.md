@@ -51,3 +51,7 @@ Before you begin, ensure you have the following installed on your local machine:
 git clone https://github.com/Mutuba/password-manager-client.git
 cd vault-security-frontend
 ```
+
+2. Install Dependencies
+   Using npm:
+   ` npm i`
