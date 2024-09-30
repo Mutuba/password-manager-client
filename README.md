@@ -53,6 +53,7 @@ cd vault-security-frontend
 ```
 
 2. Install Dependencies
-   Using npm:
 
-`javascript npm install `
+Using npm:
+
+`npm install`
