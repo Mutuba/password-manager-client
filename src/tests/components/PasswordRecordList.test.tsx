@@ -1,10 +1,4 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import PasswordRecordList from "../../components/PasswordRecordList";
 import * as passwordRecordService from "../../services/passwordRecordService";
@@ -111,6 +105,52 @@ describe("PasswordRecordList", () => {
     await waitFor(() => expect(decryptPasswordSpy).toHaveBeenCalledTimes(1));
     await waitFor(() =>
       expect(screen.getByText("DecryptedPassword123")).toBeInTheDocument()
+    );
+  });
+
+  it("should mask a decrypted password", async () => {
+    const decryptPasswordSpy = vi.spyOn(
+      passwordRecordService,
+      "decryptPassword"
+    );
+    decryptPasswordSpy.mockResolvedValue({ password: "DecryptedPassword123" });
+
+    render(
+      <PasswordRecordList
+        records={recordList}
+        vault={vaultMock}
+        userToken={userToken}
+      />
+    );
+
+    const decryptModalLauncher = screen.getByTestId("mask-unmask-password-btn");
+    fireEvent.click(decryptModalLauncher);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("decrypt-modal")).toBeVisible();
+      expect(
+        screen.getByPlaceholderText("Enter decryption key")
+      ).toBeInTheDocument();
+    });
+
+    const decryptionKeyInput = screen.getByPlaceholderText(
+      "Enter decryption key"
+    );
+    fireEvent.change(decryptionKeyInput, {
+      target: { value: "some-random-decryption-key" },
+    });
+
+    const decryptButton = screen.getByTestId("decrypt-password-button");
+    fireEvent.click(decryptButton);
+
+    await waitFor(() =>
+      expect(screen.getByText("DecryptedPassword123")).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByTestId("mask-unmask-password-btn"));
+
+    await waitFor(() =>
+      expect(screen.queryByText("DecryptedPassword123")).not.toBeInTheDocument()
     );
   });
 });
