@@ -1,20 +1,38 @@
+import { useEffect, useRef, Dispatch, FC, SetStateAction } from "react";
 interface DecryptPasswordModalProps {
-  modalRef: React.RefObject<HTMLDivElement>;
   decryptionKey: string;
-  setDecryptionKey: React.Dispatch<React.SetStateAction<string>>;
+  setDecryptionKey: Dispatch<SetStateAction<string>>;
+  setShowDecryptModal: Dispatch<SetStateAction<boolean>>;
   handleDecrypt: () => void;
   errors: string[];
   onClose: () => void;
+  showDecryptModal: boolean;
 }
 
-const DecryptPasswordModal: React.FC<DecryptPasswordModalProps> = ({
-  modalRef,
+const DecryptPasswordModal: FC<DecryptPasswordModalProps> = ({
   decryptionKey,
   setDecryptionKey,
   handleDecrypt,
   errors,
   onClose,
+  setShowDecryptModal,
+  showDecryptModal,
 }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setShowDecryptModal(false);
+      }
+    };
+    if (showDecryptModal)
+      document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [showDecryptModal]);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div
@@ -39,7 +57,11 @@ const DecryptPasswordModal: React.FC<DecryptPasswordModalProps> = ({
           </div>
         )}
         <div className="mt-4 flex justify-between">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg border">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-lg border"
+            data-testid="decrypt-password-modal-cancel-btn"
+          >
             Cancel
           </button>
           <button

@@ -88,22 +88,6 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
     );
   };
 
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setShowDecryptModal(false);
-      }
-    };
-    if (showDecryptModal)
-      document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, [showDecryptModal]);
-
   if (loading) return <Spinner />;
 
   return (
@@ -153,7 +137,8 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
 
       {showDecryptModal && currentRecord && (
         <DecryptPasswordModal
-          modalRef={modalRef}
+          setShowDecryptModal={setShowAddRecordModal}
+          showDecryptModal={showDecryptModal}
           decryptionKey={decryptionKey}
           setDecryptionKey={setDecryptionKey}
           handleDecrypt={handleDecryptPassword}
