@@ -79,7 +79,7 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
 
   const maskPassword = () => {
     if (!currentRecord) {
-      setErrors(["Missing record or user token."]);
+      setErrors(["Missing record."]);
       return;
     }
 
@@ -89,6 +89,7 @@ const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
   };
 
   const modalRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (

@@ -1,8 +1,13 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import { vi } from "vitest";
 import PasswordRecordList from "../../components/PasswordRecordList";
-
-// import * as passwordRecordService from "../../services/passwordRecordService";
+import * as passwordRecordService from "../../services/passwordRecordService";
 
 describe("PasswordRecordList", () => {
   const userToken = "random-token";
@@ -28,19 +33,6 @@ describe("PasswordRecordList", () => {
 
   const recordList = [
     {
-      id: "2",
-      type: "password_record",
-      attributes: {
-        name: "Second Record",
-        username: "Ashah",
-        url: null,
-        notes: null,
-        password: "XhBBdFifBGAOffciip",
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-    },
-    {
       id: "1",
       type: "password_record",
       attributes: {
@@ -55,7 +47,7 @@ describe("PasswordRecordList", () => {
     },
   ];
 
-  it("should records when available", async () => {
+  it("should display records when available", async () => {
     render(
       <PasswordRecordList
         records={recordList}
@@ -63,8 +55,62 @@ describe("PasswordRecordList", () => {
         userToken={userToken}
       />
     );
+    await waitFor(() => expect(screen.getByText("Pearl")).toBeInTheDocument());
+  });
+
+  it("should open the add record modal when the + Record button is clicked", async () => {
+    render(
+      <PasswordRecordList
+        records={recordList}
+        vault={vaultMock}
+        userToken={userToken}
+      />
+    );
+
+    const addButton = screen.getByText("+ Record");
+    fireEvent.click(addButton);
+
+    expect(screen.getByText("Add New Record")).toBeInTheDocument();
+  });
+
+  it("should decrypt a password and update the record", async () => {
+    const decryptPasswordSpy = vi.spyOn(
+      passwordRecordService,
+      "decryptPassword"
+    );
+    decryptPasswordSpy.mockResolvedValue({ password: "DecryptedPassword123" });
+
+    render(
+      <PasswordRecordList
+        records={recordList}
+        vault={vaultMock}
+        userToken={userToken}
+      />
+    );
+
+    const decryptModalLauncher = screen.getByTestId("mask-unmask-password-btn");
+    fireEvent.click(decryptModalLauncher);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("decrypt-modal")).toBeVisible();
+      expect(
+        screen.getByPlaceholderText("Enter decryption key")
+      ).toBeInTheDocument();
+    });
+
+    const decryptionKeyInput = screen.getByPlaceholderText(
+      "Enter decryption key"
+    );
+    fireEvent.change(decryptionKeyInput, {
+      target: { value: "some-random-decryption-key" },
+    });
+
+    const decryptButton = screen.getByTestId("decrypt-password-button");
+    fireEvent.click(decryptButton);
+
+    await waitFor(() => expect(decryptPasswordSpy).toHaveBeenCalledTimes(1));
     await waitFor(() =>
-      expect(screen.getByText("Daniel's Vault")).toBeInTheDocument()
+      expect(screen.getByText("DecryptedPassword123")).toBeInTheDocument()
     );
   });
 });

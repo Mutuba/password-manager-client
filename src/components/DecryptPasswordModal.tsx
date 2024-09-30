@@ -17,10 +17,14 @@ const DecryptPasswordModal: React.FC<DecryptPasswordModalProps> = ({
 }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div ref={modalRef} className="bg-white p-4 rounded-lg shadow-lg w-96">
-        <h2 className="text-lg font-bold">Enter Decryption Key</h2>
+      <div
+        data-testid="decrypt-modal"
+        ref={modalRef}
+        className="bg-white p-4 rounded-lg shadow-lg w-96"
+      >
         <input
           type="password"
+          placeholder="Enter decryption key"
           className="border border-gray-300 p-2 mt-2 w-full"
           value={decryptionKey}
           onChange={(e) => setDecryptionKey(e.target.value)}
@@ -39,6 +43,7 @@ const DecryptPasswordModal: React.FC<DecryptPasswordModalProps> = ({
             Cancel
           </button>
           <button
+            data-testid="decrypt-password-button"
             onClick={handleDecrypt}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg"
           >

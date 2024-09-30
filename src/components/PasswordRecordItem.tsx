@@ -95,7 +95,7 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
           </div>
         )}
       </h3>
-      x
+
       <p className="text-gray-600">
         <strong>Username:</strong> {record.attributes.username}
       </p>
@@ -103,6 +103,7 @@ const PasswordRecordItem: React.FC<PasswordRecordItemProps> = ({
         <strong>Password:</strong>{" "}
         {decrypted ? record.attributes.password : "••••••••"}
         <button
+          data-testid="mask-unmask-password-btn"
           onClick={decrypted ? maskPassword : onDecrypt}
           className="ml-2 text-blue-500 hover:text-blue-700 relative hover:scale-105 transition-transform duration-200"
         >
