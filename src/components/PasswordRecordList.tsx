@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, FC } from "react";
 import { PasswordRecord } from "../types/PasswordRecordTypes";
 import { decryptPassword } from "../services/passwordRecordService";
 import Spinner from "../shared/Spinner";
@@ -13,7 +13,7 @@ interface PasswordRecordListProps {
   vault: Vault | null;
 }
 
-const PasswordRecordList: React.FC<PasswordRecordListProps> = ({
+const PasswordRecordList: FC<PasswordRecordListProps> = ({
   records,
   userToken,
   vault,
